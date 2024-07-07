@@ -97,3 +97,82 @@ systemctl status ufw
 # or ufw status
 
 -----------------------------------------------
+
+# Wordpress setup
+
+# Create folder for wordpress files
+cd /var/www/
+mkdir ./wordpress24
+cd ./wordpress24
+
+# Download wordpress from internet
+sudo wget https://wordpress.org/latest.tar.gz
+ls -lh
+sudo rm latest.tar.gz
+sudo mv wordpress/* .
+sudo rm -rf wordpress/
+ls -lh
+
+# Connect to mariadb to create a sample database
+create database wordpress;
+show databases;
+
+# give privileges to localhost
+grant all privileges on wordpress.* to wpuser@localhost 
+identified by 'SomePassword24';
+flush privileges
+exit
+
+# login as user
+mysql -u wpuser -p wordpress
+exit
+
+# Add databank info to wordpress config
+sudo mv wp-config-sample.php wp-config.php
+
+sudo vim wp-config.php
+...
+// ** Database settings - You can get this info from your web host ** //
+/** The name of the database for WordPress */
+define( 'DB_NAME', 'wordpress' );
+
+/** Database username */
+define( 'DB_USER', 'wpuser' );
+
+/** Database password */
+define( 'DB_PASSWORD', 'SomePassword24' );
+
+/** Database hostname */
+define( 'DB_HOST', 'localhost' );
+
+/** Database charset to use in creating database tables. */
+define( 'DB_CHARSET', 'utf8' );
+
+/** The database collate type. Don't change this if in doubt. */
+define( 'DB_COLLATE', '' );
+...
+
+# adapt ownership for users and group for wordpress24 folder 
+cd ..
+ls -la
+sudo chown www-data:www-data wordpress24/ -R 
+
+-----------------------------------------------
+# Wordpress installation for Apache config
+sudo vim /etc/apache2/sites-available/000-default.conf
+...
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/wordpress24
+...
+
+sudo systemctl restart apache2
+
+-----------------------------------------------
+# On mozilla when loading the ip 192.168.88.64 wordpress is active
+# and I can do the first configurations there
+Site Title: website24
+Username: user_888
+Password: *****
+email: random@mail.com
+
+-----------------------------------------------
