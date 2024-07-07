@@ -1,0 +1,99 @@
+Steps from zero to setting up a Lamp Server
+
+-----------------------------------------------
+
+Download Virtual Box
+
+Name: Webserver Debian
+Hostname: debian
+Domain Name: 
+
+Image:
+debian-edu-12.6.0-amd64-netinst
+
+root password	*****			
+
+name User account:	user_888	
+user name:	user_888		
+password	*****			
+
+Some Options Chosen
+ssh-server
+grub-bootloader
+
+-----------------------------------------------
+
+ip a 
+# actual IP enp0s3: 192.168.88.64/24 dynamic
+
+actual IP
+
+# Add user in sudoers file
+su - 
+visudo 
+# inside file:
+user_888 ALL=(ALL) ALL
+
+# Install Apache
+apt install apache2 apache2-utils
+
+# Check apache status 
+systemctl status apache2
+sudo apache2 -v
+> Apache2.4.59(Debian)
+
+# On Mozilla Firefox the apache2 start page
+# is displayed when entering the ip
+192.168.88.64
+
+-----------------------------------------------
+
+Installing MariaDB
+
+sudo apt install mariadb-server mariadb-client
+
+systemctl status mariadb
+# yes it is running and enabled
+
+# script for security
+mysql_secure_installation
+
+password set			df
+# accept most standards
+
+-----------------------------------------------
+
+# Installing PHP
+apt install php php-cli php-mysql libapache2-mod-php 
+php-gd php-xml php-curl php-common
+
+php -v
+> PHP 8.2.20 (cli)...
+
+# Activate modules
+sudo a2enmod php8.2
+systemctl restart apache2
+
+sudo apt install vim
+vim /var/www/html/info.php
+
+# on Mozilla Firefox: 192.168.88.6/info.php
+# the PHP info is shown
+
+# Ubuntu Firewall
+apt install ufw
+systemctl status ufw
+
+# Some standard config
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow ssh
+sudo ufw allow http
+sudo ufw allow https
+
+sudo ufw enable
+sudo ufw reload
+systemctl status ufw
+# or ufw status
+
+-----------------------------------------------
