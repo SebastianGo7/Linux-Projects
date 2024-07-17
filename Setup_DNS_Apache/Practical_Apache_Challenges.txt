@@ -1,7 +1,7 @@
 
 Practical Apache Challenges
 
-# Challenges inspired by Andrei Dumitrescu course: Learn Linux by Doing with 5 Projects
+# Challenges inspired by Andrei Dumitrescu course: Learn Linux by Doing
 ---------------------------------------------------
 
 # Challenge #1
@@ -202,3 +202,228 @@ user_999@user999-VirtualBox:~/Desktop$ sudo vim /var/www/crystalmind.academy/pro
 
 ---------------------------------------------------
 
+# Challenge #8
+# Create a directory called team in the Virtual Host’s DocumentRoot directory 
+# and enable HTTP Digest Authentication for accessing the directory using 
+# <Directory> … </Directory>.
+
+user_999@user999-VirtualBox:~/Desktop$ sudo apt install apache2-utils
+
+# apache2-utils are installed successfully
+user_999@user999-VirtualBox:~/Desktop$ a2enmod auth_digest
+
+# Editing virtual host file
+
+user_999@user999-VirtualBox:~/Desktop$ sudo vim /etc/apache2/sites-available/crystalmind.academy.conf 
+
+<VirtualHost *:80>
+    ServerName crystalmind.academy
+    ServerAlias www.crystalmind.academy
+    DocumentRoot /var/www/crystalmind.academy
+    ErrorLog ${APACHE_LOG_DIR}/crystalmind_academy_error.log
+    CustomLog ${APACHE_LOG_DIR}/crystalmind_academy_access.log combined
+
+    <Directory /var/www/crystalmind.academy/admin>
+        AllowOverride None
+    </Directory>
+
+    <Directory /var/www/crystalmind.academy/projects>
+        <FilesMatch "\.(pdf|xls)$">
+            Require ip 192.168.88.76  
+        </FilesMatch>
+        <FilesMatch ".*">
+            Require all granted  
+        </FilesMatch>
+    </Directory>
+
+    <Directory /var/www/crystalmind.academy/team>
+        AuthType Digest
+        AuthName "Restricted Area"
+        AuthDigestProvider file
+        AuthUserFile /etc/apache2/.htdigest
+        Require valid-user
+    </Directory>
+</VirtualHost>
+
+# Allowing the IP address 192.168.88.76 to access PDF and XLS files in projects
+# Allowing all access to other files in projects
+
+# Creating an .htdigest file and adding user, as well as a password peace when prompted
+sudo htdigest -c /etc/apache2/.htdigest "Restricted Area" wpuser
+
+Adding password for wpuser in realm Restricted Area.
+New password: 
+Re-type new password: 
+
+# Restarting Apache to apply the changes
+user_999@user999-VirtualBox:~/Desktop$ sudo systemctl restart apache2.service
+
+---------------------------------------------------
+
+# Challenge #9
+# Enhance the requirements of Challenge #9 by adding IP-based authorization 
+# to the team directory. Access to the directory is permitted only if the 
+# user successfully authenticates and originates from a permitted source IP 
+# address (use your public/private IP address).
+
+# Editing virtual host file to implement that feature
+
+user_999@user999-VirtualBox:~/Desktop$ sudo vim /etc/apache2/sites-available/crystalmind.academy.conf 
+
+<VirtualHost *:80>
+    ServerName crystalmind.academy
+    ServerAlias www.crystalmind.academy
+    DocumentRoot /var/www/crystalmind.academy
+    ErrorLog ${APACHE_LOG_DIR}/crystalmind_academy_error.log
+    CustomLog ${APACHE_LOG_DIR}/crystalmind_academy_access.log combined
+
+    <Directory /var/www/crystalmind.academy/team>
+        <RequireAll>
+            AuthType Digest
+            AuthName "Restricted Area"
+            AuthDigestProvider file
+            AuthUserFile /etc/apache2/.htdigest
+
+            <RequireAny>
+                Require all denied
+                Require ip 192.168.88.76
+            </RequireAny>
+        </RequireAll>
+    </Directory>
+</VirtualHost>
+
+# Restarting Apache to apply the changes
+user_999@user999-VirtualBox:~/Desktop$ sudo systemctl restart apache2.service
+
+---------------------------------------------------
+
+# Challenge #10
+# Create a directory called website in the Virtual Host’s DocumentRoot 
+# directory and configure home.html to be delivered by default when clients 
+# access the directory (and its subdirectories). If home.html does not exist,
+# the server should not list the directory contents.
+
+# Editing the virtual host file adding a DirectoryIndex
+
+user_999@user999-VirtualBox:~/Desktop$ sudo vim /etc/apache2/sites-available/crystalmind.academy.conf 
+
+<VirtualHost *:80>
+    ServerName crystalmind.academy
+    ServerAlias www.crystalmind.academy
+    DocumentRoot /var/www/crystalmind.academy
+    ErrorLog ${APACHE_LOG_DIR}/crystalmind_academy_error.log
+    CustomLog ${APACHE_LOG_DIR}/crystalmind_academy_access.log combined
+
+    <Directory /var/www/crystalmind.academy/website>
+        DirectoryIndex home.html
+        Options -Indexes
+    </Directory>
+</VirtualHost>
+
+# Restarting Apache to apply the changes
+user_999@user999-VirtualBox:~/Desktop$ sudo systemctl restart apache2.service
+
+---------------------------------------------------
+
+# Challenge #11
+# Enable and test HTTP compression using mod_deflate.
+
+# Activating the deflate module
+
+user_999@user999-VirtualBox:~/Desktop$ sudo a2enmod deflate
+
+Considering dependency filter for deflate:
+Module filter already enabled
+Module deflate already enabled
+
+# Specifying which file types are delivered in a compressed form
+user_999@user999-VirtualBox:~/Desktop$ sudo vim /etc/apache2/mods-enabled/deflate.conf
+
+<IfModule mod_deflate.c>
+    <IfModule mod_filter.c>
+        AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript
+        AddOutputFilterByType DEFLATE application/x-javascript application/javascript application/ecmascript
+        AddOutputFilterByType DEFLATE application/rss+xml
+        AddOutputFilterByType DEFLATE application/wasm
+        AddOutputFilterByType DEFLATE application/xml
+    </IfModule>
+</IfModule>
+
+# Changing the log format to check the compression ratio
+user_999@user999-VirtualBox:~/Desktop$ sudo vim /etc/apache2/sites-enabled/crystalmind.academy.conf 
+
+<VirtualHost *:80>
+    ServerName crystalmind.academy
+    ServerAlias www.crystalmind.academy
+    DocumentRoot /var/www/crystalmind.academy
+    ErrorLog ${APACHE_LOG_DIR}/crystalmind_academy_error.log
+    CustomLog ${APACHE_LOG_DIR}/crystalmind_academy_access.log combined
+
+    DeflateFilterNote ratio
+    LogFormat '"%r" %b (%{ratio}n%%) "%{User-agent}i"' deflate
+    CustomLog "/var/log/apache2/deflate_log" deflate
+
+    <Directory /var/www/crystalmind.academy/website>
+        DirectoryIndex home.html
+        Options -Indexes
+    </Directory>
+</VirtualHost>
+
+# Restarting Apache to apply the changes
+user_999@user999-VirtualBox:~/Desktop$ sudo systemctl restart apache2.service
+
+---------------------------------------------------
+
+# Challenge #12
+# Activate the status module and monitor the server using the module. 
+# Restrict access to the monitoring page to only your public/private IP address.
+
+# Activating the status module
+
+user_999@user999-VirtualBox:~/Desktop$ sudo a2enmod status
+
+Module status already enabled
+
+# Configuring access to the server status page
+# Inside <Location> restrict access based on my IP address
+
+user_999@user999-VirtualBox:~/Desktop$ sudo vim /etc/apache2/mods-available/status.conf
+
+<IfModule mod_status.c>
+    # Allow server status reports generated by mod_status,
+    # with the URL of http://servername/server-status
+    # Uncomment and change the "192.0.2.0/24" to allow access from other hosts.
+    
+    <Location /server-status>
+        SetHandler server-status
+        Require local
+        Require ip 192.168.88.76/24
+    </Location>
+
+    # Keep track of extended status information for each request
+    ExtendedStatus On
+
+    # Determine if mod_status displays the first 63 characters of a request or
+    # the last 63, assuming the request itself is greater than 63 chars.
+    # Default: Off
+    # SeeRequestTail On
+
+    <IfModule mod_proxy.c>
+        # Show Proxy LoadBalancer status in mod_status
+        ProxyStatus On
+    </IfModule>
+</IfModule>
+
+# Restarting Apache to apply the changes
+user_999@user999-VirtualBox:~/Desktop$ sudo systemctl restart apache2.service
+
+# Accessing the Apache Server Status page through mozilla firefox
+# on 192.168.88.76/server-status
+
+---------------------------------------------------
+
+# By completing these challenges, I gained practical insights into setting up, 
+# securing, and optimizing Apache web servers. 
+# These skills are crucial for managing web hosting environments, 
+# ensuring sites are both secure and performant.
+---------------------------------------------------
