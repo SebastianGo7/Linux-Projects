@@ -1,0 +1,283 @@
+
+Exploring DNS and Web Fundamentals
+
+# Challenges inspired by Andrei Dumitrescu course: Learn Linux by Doing with 5 Projects
+---------------------------------------------------
+# Challenge #1
+# Find out the IP address of ubuntu.com using the host command.
+
+user_999@user999-VirtualBox:~/Desktop$ host ubuntu.com
+
+ubuntu.com has address 185.125.190.29
+ubuntu.com has address 185.125.190.21
+ubuntu.com has address 185.125.190.20
+ubuntu.com has IPv6 address 2620:2d:4000:1::27
+ubuntu.com has IPv6 address 2620:2d:4000:1::28
+ubuntu.com has IPv6 address 2620:2d:4000:1::26
+ubuntu.com mail is handled by 10 mx.ubuntu.com.
+
+# various addresses of ubuntu.com as 185.125.190.20 are displayed
+
+---------------------------------------------------
+
+# Challenge #2
+# Find out the IP address of ubuntu.com using nslookup
+
+user_999@user999-VirtualBox:~/Desktop$ nslookup ubuntu.com
+
+Server:		127.0.0.53
+Address:	127.0.0.53#53
+
+Non-authoritative answer:
+Name:	ubuntu.com
+Address: 185.125.190.21
+Name:	ubuntu.com
+Address: 185.125.190.20
+Name:	ubuntu.com
+Address: 185.125.190.29
+Name:	ubuntu.com
+Address: 2620:2d:4000:1::28
+Name:	ubuntu.com
+Address: 2620:2d:4000:1::26
+Name:	ubuntu.com
+Address: 2620:2d:4000:1::27
+
+# the ip address is displayed as well as more DNS-related information
+
+---------------------------------------------------
+
+# Challenge #3
+# Find out the IP address of wikileaks.org using the dig command.
+
+user_999@user999-VirtualBox:~/Desktop$ dig -t a wikileaks.org
+
+; <<>> DiG 9.18.24-0ubuntu0.22.04.1-Ubuntu <<>> -t a wikileaks.org
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 31930
+;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 65494
+;; QUESTION SECTION:
+;wikileaks.org.			IN	A
+
+;; ANSWER SECTION:
+wikileaks.org.		388	IN	A	51.159.197.136
+wikileaks.org.		388	IN	A	80.81.248.21
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.53#53(127.0.0.53) (UDP)
+;; WHEN: Fri Jul 05 20:49:25 -05 2024
+;; MSG SIZE  rcvd: 74
+
+# Inside the answer section two addresses are displayed
+
+---------------------------------------------------
+
+# Challenge #4
+# Find out the authoritative nameservers (ns) of wikileaks.org
+
+user_999@user999-VirtualBox:~/Desktop$ dig -t ns wikileaks.org
+
+; <<>> DiG 9.18.24-0ubuntu0.22.04.1-Ubuntu <<>> -t ns wikileaks.org
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 37660
+;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 65494
+
+;; QUESTION SECTION:
+;wikileaks.org.			IN	NS
+
+;; ANSWER SECTION:
+wikileaks.org.		1800	IN	NS	ns2.wlinfra.org.
+wikileaks.org.		1800	IN	NS	ns1.wlinfra.org.
+
+;; Query time: 183 msec
+;; SERVER: 127.0.0.53#53(127.0.0.53) (UDP)
+;; WHEN: Fri Jul 05 20:54:16 -05 2024
+;; MSG SIZE  rcvd: 86
+
+# The authoriative nameservers are in the Answer section: 
+# ns2.wlinfra.org and ns1.wlinfra.org
+
+---------------------------------------------------
+
+# Challenge #5
+# Find out the IP address of one of the authoritative 
+# nameservers of parrotsec.org
+
+# The dig command is used to find the authoriative nameservers
+
+user_999@user999-VirtualBox:~/Desktop$ dig parrotsec.org NS
+
+; <<>> DiG 9.18.24-0ubuntu0.22.04.1-Ubuntu <<>> parrotsec.org NS
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 33000
+;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 65494
+
+;; QUESTION SECTION:
+;parrotsec.org.         IN  NS
+
+;; ANSWER SECTION:
+parrotsec.org.      7154    IN  NS  simon.ns.cloudflare.com.
+parrotsec.org.      7154    IN  NS  pola.ns.cloudflare.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.53#53(127.0.0.53) (UDP)
+;; WHEN: Sun Jul 07 08:48:18 -05 2024
+;; MSG SIZE  rcvd: 98
+
+
+# The dig command is used again to find the ip address of the chosen 
+# nameserver simon.ns.cloudflare.com
+
+
+user_999@user999-VirtualBox:~/Desktop$ dig -t a simon.ns.cloudflare.com
+
+; <<>> DiG 9.18.24-0ubuntu0.22.04.1-Ubuntu <<>> -t a simon.ns.cloudflare.com
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 34216
+;; flags: qr rd ra; QUERY: 1, ANSWER: 3, AUTHORITY: 13, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 65494
+
+;; QUESTION SECTION:
+;simon.ns.cloudflare.com.       IN      A
+
+;; ANSWER SECTION:
+simon.ns.cloudflare.com. 6909  IN      A       173.245.59.232
+simon.ns.cloudflare.com. 6909  IN      A       108.162.193.232
+simon.ns.cloudflare.com. 6909  IN      A       172.64.33.232
+
+;; AUTHORITY SECTION:
+.                       6909    IN      NS      e.root-servers.net.
+.                       6909    IN      NS      g.root-servers.net.
+.                       6909    IN      NS      h.root-servers.net.
+.                       6909    IN      NS      j.root-servers.net.
+.                       6909    IN      NS      a.root-servers.net.
+.                       6909    IN      NS      d.root-servers.net.
+.                       6909    IN      NS      k.root-servers.net.
+.                       6909    IN      NS      c.root-servers.net.
+.                       6909    IN      NS      b.root-servers.net.
+.                       6909    IN      NS      l.root-servers.net.
+.                       6909    IN      NS      m.root-servers.net.
+.                       6909    IN      NS      i.root-servers.net.
+.                       6909    IN      NS      f.root-servers.net.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.53#53(127.0.0.53) (UDP)
+;; WHEN: Sun Jul 07 08:54:04 -05 2024
+;; MSG SIZE  rcvd: 311
+
+# One ip address of simon.ns.cloudflare.com is 173.245.59.232
+
+---------------------------------------------------
+
+# Challenge #6
+# Find out the authoritative nameservers (ns) of kali.org from
+# the DNS server with IP address 1.1.1.1
+
+user_999@user999-VirtualBox:~/Desktop$ dig kali.org NS @1.1.1.1
+
+; <<>> DiG 9.18.24-0ubuntu0.22.04.1-Ubuntu <<>> kali.org NS @1.1.1.1
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 33543
+;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 1232
+
+;; QUESTION SECTION:
+;kali.org.          IN  NS
+
+;; ANSWER SECTION:
+kali.org.       86400   IN  NS  nash.ns.cloudflare.com.
+kali.org.       86400   IN  NS  nina.ns.cloudflare.com.
+
+;; Query time: 12 msec
+;; SERVER: 1.1.1.1#53(1.1.1.1) (UDP)
+;; WHEN: Sun Jul 07 09:09:47 -05 2024
+;; MSG SIZE  rcvd: 92
+
+# The authoritative nameservers of kali.org are nash.ns.cloudflare.com
+# and nina.ns.cloudflare.com
+
+---------------------------------------------------
+
+# Challenge #7
+# You've just acquired the ilovelinux.tk domain and 
+# want to host it on your own DNS server.
+# What should you add to /etc/bind/named.conf.local so that 
+# your name server will be authoritative for the domain?
+
+vim /etc/bind/named.conf.local
+
+zone "ilovelinux.tk"{
+        type master;
+        file "/etc/bind/ilovelinux.tk.db";
+};
+
+---------------------------------------------------
+
+# Challenge #8
+# Create an example of a zone file for the ilovelinux.tk domain.
+
+vim /etc/bind/zones/ilovelinux.tk.zone
+
+$TTL    86400
+@       IN      SOA     ns1.ilovelinux.tk. admin.ilovelinux.tk. (
+                        2023062801 ; Serial
+                        3600       ; Refresh
+                        1800       ; Retry
+                        604800     ; Expire
+                        86400 )    ; Minimum TTL
+;
+                NS       ns1.ilovelinux.tk
+ns1             A        167.172.182.44
+ilovelinux.tk.	A        167.172.182.44
+www             CNAME    ilovelinux.tk.
+
+# An example of a zone file is created with a Time-to-Live of 1 day
+# the primary nameserver ilovelinux.tk is used and declared as authoriative
+# nameserver. An Alias for www is set so that requests to www.ilovelinux.tk
+# are redirected to ilovelinux.tk
+
+---------------------------------------------------
+
+# Challenge #9
+# Add a subdomain named admin of the ilovelinux.tk domain
+# The subdomain will translate to 198.145.29.83
+
+vim /etc/bind/zones/ilovelinux.tk.zone
+
+$TTL    86400
+@       IN      SOA     ns1.ilovelinux.tk. admin.ilovelinux.tk. (
+                        2023062801 ; Serial
+                        3600       ; Refresh
+                        1800       ; Retry
+                        604800     ; Expire
+                        86400 )    ; Minimum TTL
+;
+                NS       ns1.ilovelinux.tk
+ns1             A        167.172.182.44
+ilovelinux.tk.	A        167.172.182.44
+www             CNAME    ilovelinux.tk.
+admin           A        198.145.29.83
+
+# the lowes added line adds the subdomain named admin to 
+# ilovelinux.tk and maps it to the ip address 198.145.29.83
+---------------------------------------------------
+
+
+
