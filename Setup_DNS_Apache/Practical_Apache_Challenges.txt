@@ -1,0 +1,204 @@
+
+Practical Apache Challenges
+
+# Challenges inspired by Andrei Dumitrescu course: Learn Linux by Doing with 5 Projects
+---------------------------------------------------
+
+# Challenge #1
+# Install Apache, ensure it’s running, and access the Web server 
+# using the Browser and server’s IP address.
+
+# Installing apache2
+user_999@user999-VirtualBox:~/Desktop$ sudo apt install apache2
+...
+# apache2 is installed on the system
+
+user_999@user999-VirtualBox:~/Desktop$ sudo systemctl status apache2
+
+● apache2.service - The Apache HTTP Server
+     Loaded: loaded (/lib/systemd/system/apache2.service; enabled; vendor preset: enab>
+     Active: active (running) since Mon 2024-07-08 15:11:45 -05; 29s ago
+       Docs: https://httpd.apache.org/docs/2.4/
+   Main PID: 3881 (apache2)
+      Tasks: 55 (limit: 2260)
+     Memory: 5.0M
+        CPU: 38ms
+     CGroup: /system.slice/apache2.service
+             ├─3881 /usr/sbin/apache2 -k start
+             ├─3883 /usr/sbin/apache2 -k start
+             └─3884 /usr/sbin/apache2 -k start
+jul 08 15:11:45 user999-VirtualBox systemd[1]: Starting The Apache HTTP Server...
+jul 08 15:11:45 user999-VirtualBox apachectl[3880]: AH00558: apache2: Could not reliab>
+jul 08 15:11:45 user999-VirtualBox systemd[1]: Started The Apache HTTP Server.
+lines 1-16/16 (END)
+
+# installation was successful
+
+user_999@user999-VirtualBox:~/Desktop$ ip address show dev enp0s3
+
+2: enp0s3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 08:00:27:16:d8:30 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.88.76/24 brd 192.168.88.255 scope global dynamic noprefixroute enp0s3
+       valid_lft 304sec preferred_lft 304sec
+    inet6 fe80::5163:6e3c:a3a7:601c/64 scope link noprefixroute 
+       valid_lft forever preferred_lft forever
+
+# Loading http://192.168.88.76/ in mozilla firefox shows
+# the Apache2 Default page
+
+---------------------------------------------------
+
+# Challenge #2
+# Configure Virtual Hosting for a domain and access the website 
+# using the domain name. In the DocumentRoot directory of the Virtual Host, 
+# create a directory called mysite and a file named myfile.html. 
+# Access the file with the Browser.
+
+# Creating a file named crystalmind.academy.conf in /etc/apache2/site-available
+user_999@user999-VirtualBox:~/Desktop$ sudo vim /etc/apache2/sites-available/crystalmind.academy.conf
+
+<VirtualHost *:80>
+    ServerName crystalmind.academy
+    ServerAlias www.crystalmind.academy
+    DocumentRoot /var/www/crystalmind.academy
+    ErrorLog ${APACHE_LOG_DIR}/crystalmind_academy_error.log
+    CustomLog ${APACHE_LOG_DIR}/crystalmind_academy_access.log combined
+</VirtualHost>
+
+# Creating the Document Root directory 
+user_999@user999-VirtualBox:~/Desktop$ sudo mkdir /var/www/crystalmind.academy
+
+# Enabling the Virtual Host
+user_999@user999-VirtualBox:~/Desktop$ sudo a2ensite crystalmind.academy
+
+# Restarting the web server
+user_999@user999-VirtualBox:~/Desktop$ sudo systemctl restart apache2
+
+---------------------------------------------------
+
+# Challenge #3
+# Create a directory called admin in the Virtual Host’s DocumentRoot directory 
+# and limit access to it by IP address using <Directory> … </Directory>. 
+# Allow only your public/private IP address to access the directory.
+
+# Limiting the access to the admin directory
+user_999@user999-VirtualBox:~/Desktop$ sudo vim /etc/apache2/sites-available/crystalmind.academy.conf
+
+<VirtualHost *:80>
+    ServerName crystalmind.academy
+    ServerAlias www.crystalmind.academy
+    DocumentRoot /var/www/crystalmind.academy
+    ErrorLog ${APACHE_LOG_DIR}/crystalmind_academy_error.log
+    CustomLog ${APACHE_LOG_DIR}/crystalmind_academy_access.log combined
+
+    <Directory /var/www/crystalmind.academy/admin>
+        Require ip 192.168.88.76  # Allowing this IP address to access admin
+    </Directory>
+</VirtualHost>
+
+---------------------------------------------------
+
+# Challenge #4
+# Implement the same requirements as Challenge #4 using .htaccess instead 
+# of <Directory> … </Directory>.
+
+user_999@user999-VirtualBox:~/Desktop$ sudo vim /var/www/crystalmind.academy/admin/.htaccess
+
+<RequireAll>
+    Require ip 192.168.88.76  # allowing this ip address to access admin
+</RequireAll>
+
+# Also adding AllowOverrideAll to virtual host file
+
+user_999@user999-VirtualBox:~/Desktop$ sudo vim /etc/apache2/sites-available/crystalmind.academy.conf
+
+<VirtualHost *:80>
+    ServerName crystalmind.academy
+    ServerAlias www.crystalmind.academy
+    DocumentRoot /var/www/crystalmind.academy
+    ErrorLog ${APACHE_LOG_DIR}/crystalmind_academy_error.log
+    CustomLog ${APACHE_LOG_DIR}/crystalmind_academy_access.log combined
+
+    <Directory /var/www/crystalmind.academy/admin>
+        AllowOverride All
+    </Directory>
+</VirtualHost>
+
+---------------------------------------------------
+
+# Challenge #5
+# Disable the use of .htaccess in the admin directory configured in Challenge #5. 
+# Test that the directives in .htaccess have no effect on the admin directory.
+
+# Changing the AllowOverride to None
+
+<VirtualHost *:80>
+    ServerName crystalmind.academy
+    ServerAlias www.crystalmind.academy
+    DocumentRoot /var/www/crystalmind.academy
+    ErrorLog ${APACHE_LOG_DIR}/crystalmind_academy_error.log
+    CustomLog ${APACHE_LOG_DIR}/crystalmind_academy_access.log combined
+
+    <Directory /var/www/crystalmind.academy/admin>
+        AllowOverride None
+    </Directory>
+</VirtualHost>
+
+# Applying Apache changes
+sudo systemctl restart apache2
+
+---------------------------------------------------
+
+# Challenge #6
+# Create a directory called projects in the Virtual Host’s DocumentRoot 
+# directory and restrict file access by IP address using <Files> … </Files>. 
+# Allow PDF and XLS files to be accessed only from your public/private 
+# IP address, while permitting access to all other files from any IP address.
+
+user_999@user999-VirtualBox:~/Desktop$ sudo vim /etc/apache2/sites-available/crystalmind.academy.conf 
+
+<VirtualHost *:80>
+    ServerName crystalmind.academy
+    ServerAlias www.crystalmind.academy
+    DocumentRoot /var/www/crystalmind.academy
+    ErrorLog ${APACHE_LOG_DIR}/crystalmind_academy_error.log
+    CustomLog ${APACHE_LOG_DIR}/crystalmind_academy_access.log combined
+
+    <Directory /var/www/crystalmind.academy/admin>
+        AllowOverride None
+    </Directory>
+
+    <Directory /var/www/crystalmind.academy/projects>
+        <FilesMatch "\.(pdf|xls)$">
+            Require ip 192.168.88.76 
+        </FilesMatch>
+        <FilesMatch ".*">
+            Require all granted
+        </FilesMatch>
+    </Directory>
+
+</VirtualHost>
+
+# Allowing the IP address 192.168.88.76 to access PDF and XLS files in projects
+# Allowing all access to other files in projects
+
+---------------------------------------------------
+
+# Challenge #7
+# Implement the requirements of Challenge #7 using .htaccess instead of 
+# <Directory> … </Directory>.
+
+user_999@user999-VirtualBox:~/Desktop$ sudo mkdir /var/www/crystalmind.academy/projects/
+user_999@user999-VirtualBox:~/Desktop$ sudo vim /var/www/crystalmind.academy/projects/.htaccess
+
+<FilesMatch "\.(pdf|xls)$">
+    Require ip 192.168.88.76
+</FilesMatch>
+<FilesMatch ".*">
+    Require all granted
+</FilesMatch>
+
+# Allowing the IP address 192.168.88.76 to access PDF and XLS files in projects
+
+---------------------------------------------------
+
