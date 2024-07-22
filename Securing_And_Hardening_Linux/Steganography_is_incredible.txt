@@ -1,0 +1,53 @@
+
+Projects Securing and Hardening Linux 2
+
+# Challenges inspired by Andrei Dumitrescu course: Learn Linux by Doing with 5 Projects
+---------------------------------------------------
+
+# Challenge #1
+# Utilize steghide to conceal a text file within an image. 
+# Subsequently, delete the original text file that was hidden.
+
+# added riverfoto.jpg and secret.txt file with a message
+# Install steghide
+
+user_999@user999-VirtualBox:~/Desktop$ sudo apt-get update
+user_999@user999-VirtualBox:~/Desktop$ sudo apt-get install steghide
+
+# hiding the secret message in the foto river.jpg
+
+user_999@user999-VirtualBox:~/Desktop$ steghide embed -ef secret.txt -cf riverfoto.jpg -sf river.jpg
+Enter passphrase:
+Re-Enter passphrase:
+embedding "secret.txt" in "riverfoto.jpg"... done
+writing stego file "river.jpg"... done
+user_999@user999-VirtualBox:~/Desktop$ ls
+1  2  riverfoto.jpg  river.jpg  secret.txt  usedFiles
+user_999@user999-VirtualBox:~/Desktop$ rm riverfoto.jpg
+user_999@user999-VirtualBox:~/Desktop$ rm secret.txt 
+user_999@user999-VirtualBox:~/Desktop$ ls
+1  2  river.jpg  usedFiles
+
+---------------------------------------------------
+
+# Challenge #2
+# Retrieve the hidden file from the steganographic image created 
+# in Challenge #1 using steghide.
+
+user_999@user999-VirtualBox:~/Desktop$ steghide extract -sf river.jpg 
+Enter passphrase: 
+wrote extracted data to "secret.txt".
+
+user_999@user999-VirtualBox:~/Desktop$ cat secret.txt 
+this is a secret message
+hidden inside a foto, this is incredible!
+
+---------------------------------------------------
+
+# Challenge #3
+# Calculate SHA-256 hash of the extracted file.
+
+user_999@user999-VirtualBox:~/Desktop$ sha256sum secret.txt 
+06c7e582c5cb6ecc72569985a537de391207e542292e50917988e2de2abeada1  secret.txt
+
+---------------------------------------------------
