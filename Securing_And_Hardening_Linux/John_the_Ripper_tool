@@ -1,0 +1,115 @@
+
+Projects Securing and Hardening Linux 1
+
+# Challenges inspired by Andrei Dumitrescu course: Learn Linux by Doing with 5 Projects
+---------------------------------------------------
+# Challenge #1
+# Create a new user named admin on your Linux system and set its 
+# password to 'iloveyou!'. Use John the Ripper to attempt cracking the user’s 
+# password using the provided wordlist located at 
+# /usr/share/john/password.lst.
+
+# Creating the new user admin
+user_999@user999-VirtualBox:~/Desktop$ sudo adduser admin with the given password
+
+[sudo] password for user_999:
+Adding user `admin' ...
+Adding new group `admin' (1001) ...
+Adding new user `admin' (1001) with group `admin' ...
+Creating home directory `/home/admin' ...
+Copying files from `/etc/skel' ...
+New password:
+BAD PASSWORD: The password fails the dictionary check - it is based on a dictionary word
+Retype new password:
+passwd: password updated successfully
+Changing the user information for admin
+Enter the new value, or press ENTER for the default
+	Full Name []:
+	Room Number []:
+	Work Phone []:
+	Home Phone []:
+	Other []:
+Is the information correct? [Y/n] Y
+
+
+# Installing John the Ripper
+
+user_999@user999-VirtualBox:~/Desktop$ sudo apt-get update
+user_999@user999-VirtualBox:~/Desktop$ sudo apt-get install john
+
+# loading hashes to file unshadowed
+user_999@user999-VirtualBox:~/Desktop$ sudo unshadow /etc/passwd /etc/shadow > unshadowed.txt
+
+
+user_999@user999-VirtualBox:~/Desktop$ john --format=crypt --wordlist=/usr/share/john/password.lst --rules unshadowed.txt 
+
+Loaded 2 password hashes with 2 different salts (crypt, generic crypt(3) [?/64])
+Warning: OpenMP is disabled; a non-OpenMP build may be faster
+Press 'q' or Ctrl-C to abort, almost any other key for status
+iloveyou         (admin)
+
+# password of admin is cracked
+
+---------------------------------------------------
+
+# Challenge #2
+# Merge the following three wordlists into a single large file on your 
+# Linux system:
+# /usr/share/john/password.lst
+# /usr/share/dict/american-english
+# Remove any duplicate entries from the combined wordlist.
+# Determine the total number of unique words in the resulting wordlist.
+# Conduct a dictionary attack against the system’s passwords using the 
+# merged wordlist.
+# While John the Ripper is running, interrupt the cracking session.
+# Resume the interrupted cracking session.
+
+# combining two wordlists and checking its line number
+user_999@user999-VirtualBox:~/Desktop$ cat /usr/share/dict/american-english /usr/share/john/password.lst > combined_wordlist.txt
+
+user_999@user999-VirtualBox:~/Desktop$ wc -l combined_wordlist.txt 
+107893 combined_wordlist.txt
+
+# Removing duplicate entries
+user_999@user999-VirtualBox:~/Desktop$ sort -u combined_wordlist.txt -o combined_wordlist.txt 
+user_999@user999-VirtualBox:~/Desktop$ wc -l combined_wordlist.txt 
+106599 combined_wordlist.txt
+
+# Conducting the dictionary attack
+
+user_999@user999-VirtualBox:~/Desktop$ john --format=crypt --wordlist=combined_wordlist.txt --rules unshadowed.txt 
+Loaded 2 password hashes with 2 different salts (crypt, generic crypt(3) [?/64])
+Remaining 1 password hash
+Warning: OpenMP is disabled; a non-OpenMP build may be faster
+Press 'q' or Ctrl-C to abort, almost any other key for status
+0g 0:00:00:29 0% 0g/s 48.84p/s 48.84c/s 48.84C/s adroit..adversities
+0g 0:00:00:52 0% 0g/s 49.71p/s 49.71c/s 49.71C/s allied..Alnilam
+0g 0:00:00:54 0% 0g/s 49.74p/s 49.74c/s 49.74C/s Alnilam's..altering
+0g 0:00:01:22 0% 0g/s 50.09p/s 50.09c/s 50.09C/s anything..Apollinaire
+Session aborted
+
+# Interrupted attack session and continued it
+
+user_999@user999-VirtualBox:~/Desktop$ john -restore
+Loaded 2 password hashes with 2 different salts (crypt, generic crypt(3) [?/64])
+Remaining 1 password hash
+Warning: OpenMP is disabled; a non-OpenMP build may be faster
+Press 'q' or Ctrl-C to abort, almost any other key for status
+0g 0:00:01:26 0% 0g/s 50.23p/s 50.23c/s 50.23C/s appeasers..Appomattox
+
+---------------------------------------------------
+
+# Challenge #3
+# Perform an incremental attack using John the Ripper to crack all system 
+ passwords on your Linux system.
+
+# Performing an John the Ripper incremental attack against all passwords of the system
+
+user_999@user999-VirtualBox:~/Desktop$ sudo john --format=crypt --incremental unshadowed.txt 
+
+Loaded 2 password hashes with 2 different salts (crypt, generic crypt(3) [?/64])
+Remaining 1 password hash
+Warning: OpenMP is disabled; a non-OpenMP build may be faster
+Press 'q' or Ctrl-C to abort, almost any other key for status
+
+---------------------------------------------------
