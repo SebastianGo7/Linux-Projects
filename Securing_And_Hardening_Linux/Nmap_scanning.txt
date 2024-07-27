@@ -1,0 +1,236 @@
+Nmap challenges
+
+# Challenges inspired by Andrei Dumitrescu course: Learn Linux by Doing with 5 Projects
+---------------------------------------------------
+# Challenge #1
+# Launch two Linux VMs: Linux Ubu (VM1) and Linux Deb (VM2).
+# Verify network connectivity between Ubu and Deb by ensuring they
+# can ping each other.
+# On Linux Deb, install and start at least three to four
+# services: ssh, proftpd, postfix, and apache2. Confirm their operational status.
+
+# Opened both VMs, and verified they can ping each other
+user_888@debian:~$ ping 192.168.88.64
+PING 192.168.88.64 (192.168.88.64) 56(84) bytes of data.
+64 bytes from 192.168.88.64: icmp_seq=1 ttl=64 time=0.022 ms
+64 bytes from 192.168.88.64: icmp_seq=2 ttl=64 time=0.045 ms
+
+user_999@user999-VirtualBox:~/Desktop$ ping 192.168.88.64
+PING 192.168.88.64 (192.168.88.64) 56(84) bytes of data.
+64 bytes from 192.168.88.64: icmp_seq=1 ttl=64 time=1.12 ms
+64 bytes from 192.168.88.64: icmp_seq=2 ttl=64 time=1.05 ms
+
+
+# Installing services on Linux Deb
+
+user_888@debian:~$ sudo apt update
+
+user_888@debian:~$ sudo apt install openssh-server
+user_888@debian:~$ sudo systemctl start ssh
+user_888@debian:~$ sudo systemctl enable ssh
+
+user_888@debian:~$ sudo apt install proftpd
+user_888@debian:~$ sudo systemctl start proftpd
+user_888@debian:~$ sudo systemctl enable proftpd
+
+
+user_888@debian:~$ sudo apt install postfix
+user_888@debian:~$ sudo systemctl start postfix
+user_888@debian:~$ sudo systemctl enable postfix
+
+user_888@debian:~$ sudo apt install apache2
+user_888@debian:~$ sudo systemctl start apache2
+user_888@debian:~$ sudo systemctl enable apache2
+
+
+# Confirming Operational Status
+
+user_888@debian:~$ sudo systemctl status ssh
+● ssh.service - OpenBSD Secure Shell server
+     Loaded: loaded (/lib/systemd/system/ssh.service; enabled; preset: enabled)
+     Active: active (running) since Tue 2024-07-02 16:20:32 -05; 1 week 2 days ago
+       Docs: man:sshd(8)
+             man:sshd_config(5)
+   Main PID: 568 (sshd)
+      Tasks: 1 (limit: 2285)
+     Memory: 7.5M
+        CPU: 305ms
+     CGroup: /system.slice/ssh.service
+             └─568 "sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups"
+Jul 02 16:20:32 debian systemd[1]: Started ssh.service - OpenBSD Secure Shell server.
+Jul 02 16:47:14 debian sshd[2208]: Accepted password for user_888 from 192.168.88.27 port 51286 ssh2
+Jul 02 16:47:14 debian sshd[2208]: pam_unix(sshd:session): session opened for user user_888(uid=1000) by (uid=0)
+Jul 02 16:47:14 debian sshd[2208]: pam_env(sshd:session): deprecated reading of user environment enabled
+Jul 03 06:39:15 debian sshd[19251]: Accepted password for user_888 from 192.168.88.27 port 63568 ssh2
+Jul 03 06:39:15 debian sshd[19251]: pam_unix(sshd:session): session opened for user user_888(uid=1000) by (uid=0)
+Jul 03 06:39:15 debian sshd[19251]: pam_env(sshd:session): deprecated reading of user environment enabled
+Jul 03 08:23:29 debian sshd[20396]: Accepted password for user_888 from 192.168.88.101 port 60677 ssh2
+Jul 03 08:23:29 debian sshd[20396]: pam_unix(sshd:session): session opened for user user_888(uid=1000) by (uid=0)
+Jul 03 08:23:29 debian sshd[20396]: pam_env(sshd:session): deprecated reading of user environment enabled
+
+
+user_888@debian:~$ sudo systemctl status proftpd
+● proftpd.service - ProFTPD FTP Server
+     Loaded: loaded (/lib/systemd/system/proftpd.service; enabled; preset: enabled)
+     Active: active (running) since Fri 2024-07-12 10:04:27 -05; 8min ago
+       Docs: man:proftpd(8)
+   Main PID: 21282 (proftpd)
+      Tasks: 1 (limit: 2285)
+     Memory: 1.8M
+        CPU: 60ms
+     CGroup: /system.slice/proftpd.service
+             └─21282 "proftpd: (accepting connections)"
+Jul 12 10:04:27 debian systemd[1]: Starting proftpd.service - ProFTPD FTP Server...
+Jul 12 10:04:27 debian proftpd[21280]: Checking syntax of configuration file
+Jul 12 10:04:27 debian systemd[1]: proftpd.service: Can't open PID file /run/proftpd.pid (yet?) after start: No such file or directory
+Jul 12 10:04:27 debian systemd[1]: Started proftpd.service - ProFTPD FTP Server.
+
+
+user_888@debian:~$ sudo systemctl status postfix
+● postfix.service - Postfix Mail Transport Agent
+     Loaded: loaded (/lib/systemd/system/postfix.service; enabled; preset: enabled)
+     Active: active (exited) since Fri 2024-07-12 10:09:09 -05; 4min 6s ago
+       Docs: man:postfix(1)
+   Main PID: 22168 (code=exited, status=0/SUCCESS)
+        CPU: 1ms
+Jul 12 10:09:09 debian systemd[1]: Starting postfix.service - Postfix Mail Transport Agent...
+Jul 12 10:09:09 debian systemd[1]: Finished postfix.service - Postfix Mail Transport Agent.
+
+
+user_888@debian:~$ sudo systemctl status apache2
+● apache2.service - The Apache HTTP Server
+     Loaded: loaded (/lib/systemd/system/apache2.service; enabled; preset: enabled)
+     Active: active (running) since Fri 2024-07-12 10:10:27 -05; 9min ago
+       Docs: https://httpd.apache.org/docs/2.4/
+   Main PID: 22457 (apache2)
+      Tasks: 6 (limit: 2285)
+     Memory: 16.2M
+        CPU: 145ms
+     CGroup: /system.slice/apache2.service
+             ├─22457 /usr/sbin/apache2 -k start
+             ├─22459 /usr/sbin/apache2 -k start
+             ├─22460 /usr/sbin/apache2 -k start
+             ├─22461 /usr/sbin/apache2 -k start
+             ├─22462 /usr/sbin/apache2 -k start
+             └─22463 /usr/sbin/apache2 -k start
+
+Jul 12 10:10:27 debian systemd[1]: Starting apache2.service - The Apache HTTP Server...
+Jul 12 10:10:27 debian systemd[1]: Started apache2.service - The Apache HTTP Server.
+
+
+---------------------------------------------------
+# Challenge #2
+# Perform a Syn Scan (Half Open Scan) on Linux Deb from Linux Ubu.
+
+user_999@user999-VirtualBox:~/Desktop$ sudo apt install nmap
+
+# Executing the Syn scan on Deb Linux from Ubu Linux
+
+user_999@user999-VirtualBox:~/Desktop$ sudo nmap -sS 192.168.88.64
+Starting Nmap 7.80 ( https://nmap.org ) at 2024-07-12 11:41 -05
+Nmap scan report for 192.168.88.64
+Host is up (0.00043s latency).
+Not shown: 997 filtered ports
+PORT    STATE  SERVICE
+22/tcp  open   ssh
+80/tcp  open   http
+443/tcp closed https
+MAC Address: 08:00:27:52:42:07 (Oracle VirtualBox virtual NIC)
+Nmap done: 1 IP address (1 host up) scanned in 5.00 seconds
+
+# Open and closed ports are displayed
+
+---------------------------------------------------
+
+# Challenge #3
+# From Linux Ubu, conduct version scans on the services running
+# on ports 22 (SSH) and 25 (SMTP) of Linux Deb
+
+# Performing the scan on the services of port 22 and 25 of Linux Deb
+
+user_999@user999-VirtualBox:~/Desktop$ nmap -sV -p 22,25 192.168.88.64
+Starting Nmap 7.80 ( https://nmap.org ) at 2024-07-12 11:48 -05
+Nmap scan report for 192.168.88.64
+Host is up (0.00064s latency).
+PORT   STATE    SERVICE VERSION
+22/tcp open     ssh     OpenSSH 9.2p1 Debian 2+deb12u3 (protocol 2.0)
+25/tcp filtered smtp
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 1.93 seconds
+
+---------------------------------------------------
+
+# Challenge #4
+# Execute a PING scan across the entire LAN from Linux Ubu,
+# ensuring faster execution.
+
+user_999@user999-VirtualBox:~/Desktop$ nmap -sn -T4 192.168.88.64
+Starting Nmap 7.80 ( https://nmap.org ) at 2024-07-12 11:53 -05
+Nmap scan report for 192.168.88.64
+Host is up (0.00067s latency).
+Nmap done: 1 IP address (1 host up) scanned in 0.03 seconds
+
+---------------------------------------------------
+
+# Challenge #5
+# Scan the first 100 ports on Linux Deb from Linux Ubu. 
+# Utilize OS detection, version detection, script scanning, 
+# and optimize for faster execution.
+
+user_999@user999-VirtualBox:~/Desktop$ sudo nmap -sS -sV -O -sC --top-ports 100 192.168.88.64
+user_999@user999-VirtualBox:~/Desktop$ sudo nmap -sS -sV -O -sC --top-p 1-100 192.168.88.64
+Starting Nmap 7.80 ( https://nmap.org ) at 2024-07-12 12:04 -05
+Nmap scan report for 192.168.88.64
+Host is up (0.00087s latency).
+PORT   STATE SERVICE VERSION
+80/tcp open  http    Apache httpd 2.4.61 ((Debian))
+|_http-generator: WordPress 6.5.5
+|_http-server-header: Apache/2.4.61 (Debian)
+|_http-title: website24
+MAC Address: 08:00:27:52:42:07 (Oracle VirtualBox virtual NIC)
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Aggressive OS guesses: Linux 2.6.32 (94%), Linux 3.10 - 4.11 (94%), Linux 3.2 - 4.9 (94%), Linux 3.4 - 3.10 (94%), Linux 2.6.32 - 3.10 (93%), Linux 2.6.32 - 3.13 (93%), Synology DiskStation Manager 5.2-5644 (92%), Linux 3.10 (92%), Linux 2.6.22 - 2.6.36 (91%), Linux 2.6.39 (91%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 1 hop
+OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 14.01 seconds
+
+# The first 100 ports where scanned
+# the options used are: sS: SYN scan, sV: enables version detection,
+# -o attempts to identify the operating system, -sC performs default nmap scripts
+# -p 1-100 scans the ports 1-100
+
+---------------------------------------------------
+
+# Challenge #6
+# Export the scan report generated from Challenge #5 into a file.
+
+user_999@user999-VirtualBox:~/Desktop$ sudo nmap -sS -sV -O -sC --top-p 1-100 192.168.88.64 -oN scan_report.txt
+Starting Nmap 7.80 ( https://nmap.org ) at 2024-07-12 12:10 -05
+Nmap scan report for 192.168.88.64
+Host is up (0.00090s latency).
+PORT   STATE SERVICE VERSION
+80/tcp open  http    Apache httpd 2.4.61 ((Debian))
+|_http-generator: WordPress 6.5.5
+|_http-server-header: Apache/2.4.61 (Debian)
+|_http-title: website24
+MAC Address: 08:00:27:52:42:07 (Oracle VirtualBox virtual NIC)
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Aggressive OS guesses: Linux 2.6.32 (94%), Linux 3.10 - 4.11 (94%), Linux 3.2 - 4.9 (94%), Linux 3.4 - 3.10 (94%), Linux 2.6.32 - 3.10 (93%), Linux 2.6.32 - 3.13 (93%), Linux 3.10 (93%), Synology DiskStation Manager 5.2-5644 (92%), Linux 2.6.22 - 2.6.36 (91%), Linux 2.6.39 (91%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 1 hop
+OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 14.06 seconds
+
+# The option on scan_report.txt outputs a human readable format 
+
+---------------------------------------------------
+
+# The Nmap tasks involved scanning Deb from Ubu to identify open ports 
+# and checking the versions of the SSH and SMTP services running on it. 
+# A quick PING scan was performed to discover active devices on the network. 
+# Additionally, a detailed scan of the first 100 ports was conducted, 
+# and the results were saved to a file for later analysis.
+
+---------------------------------------------------
