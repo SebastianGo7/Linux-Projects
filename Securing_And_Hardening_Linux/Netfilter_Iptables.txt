@@ -1,0 +1,150 @@
+Netfilters Iptables
+
+# Challenges inspired by Andrei Dumitrescu course: Learn Linux by Doing with 5 Projects
+---------------------------------------------------
+# Challenge #1
+# Set the default policies for the INPUT and OUTPUT chains to ACCEPT, 
+# and for the FORWARD chain to DROP using iptables commands.
+
+# Setting the desired policies using ip tables commands
+
+user_999@user999-VirtualBox:~/Desktop$ sudo iptables -P INPUT ACCEPT
+[sudo] password for user_999: 
+user_999@user999-VirtualBox:~/Desktop$ sudo iptables -P OUTPUT ACCEPT
+user_999@user999-VirtualBox:~/Desktop$ sudo iptables -P FORWARD DROP
+
+---------------------------------------------------
+# Challenge #2
+# Display the filter table of the INPUT chain using an iptables command.
+
+user_999@user999-VirtualBox:~/Desktop$ sudo iptables -L INPUT -v -n
+Chain INPUT (policy ACCEPT 51 packets, 44858 bytes)
+ pkts bytes target     prot opt in     out     source               destination
+
+---------------------------------------------------
+# Challenge #3
+# Flush all chains in the filter table using iptables commands.
+
+user_999@user999-VirtualBox:~/Desktop$ sudo iptables -F
+
+---------------------------------------------------
+# Challenge #4
+# Create an iptables rule to drop all incoming packets to port 22/tcp (SSH). 
+# Ensure this rule is the first in the chain.
+
+user_999@user999-VirtualBox:~/Desktop$ sudo iptables -I INPUT -p tcp --dport 22 -j DROP
+
+---------------------------------------------------
+# Challenge #5
+# Flush all tables and chains and set the default policy to ACCEPT on all 
+# chains using iptables commands to remove any existing firewall rules.
+
+# Setting the ACCEPT POLICY on all CHAINS
+user_999@user999-VirtualBox:~/Desktop$ sudo iptables -P INPUT ACCEPT
+user_999@user999-VirtualBox:~/Desktop$ sudo iptables -P OUTPUT ACCEPT
+user_999@user999-VirtualBox:~/Desktop$ sudo iptables -P FORWARD ACCEPT
+
+# Flashing all tables from all Chains
+user_999@user999-VirtualBox:~/Desktop$ 
+user_999@user999-VirtualBox:~/Desktop$ sudo iptables -t filter -F
+user_999@user999-VirtualBox:~/Desktop$ sudo iptables -t nat -F
+user_999@user999-VirtualBox:~/Desktop$ sudo iptables -t mangle -F
+user_999@user999-VirtualBox:~/Desktop$ sudo iptables -t raw -F
+
+---------------------------------------------------
+# Challenge #6
+# Write iptables rules to drop all incoming packets from IP addresses 
+# 100.0.0.1 and 1.2.3.4, and all outgoing packets to IP address 80.0.0.1. 
+# These rules should be placed at the beginning of their respective chains.
+
+user_999@user999-VirtualBox:~/Desktop$ sudo iptables -I INPUT 1 -s 100.0.0.1 -j DROP
+user_999@user999-VirtualBox:~/Desktop$ sudo iptables -I INPUT 2 -s 1.2.3.4 -j DROP 
+user_999@user999-VirtualBox:~/Desktop$ sudo iptables -I OUTPUT 1 -d 80.0.0.1 -j DROP
+
+---------------------------------------------------
+# Challenge #7
+# Write iptables rules to drop all outgoing TCP packets (port 80 and 443)
+# to www.linuxquestions.org.
+
+user_999@user999-VirtualBox:~/Desktop$ sudo iptables -I OUTPUT 1 -p tcp -d www.linuxquestions.org -j DROP
+user_999@user999-VirtualBox:~/Desktop$ sudo iptables -I OUTPUT 2 -p tcp -d www.linuxquestions.org -j DROP
+
+---------------------------------------------------
+# Challenge #8
+# Write iptables rules to drop all outgoing TCP packets (port 80 & 443)
+# to www.linuxquestions.org. Assume the Linux machine is functioning 
+# as a router.
+
+user_999@user999-VirtualBox:~/Desktop$ sudo iptables -I FORWARD 1 -p tcp -d www.linuxquestions.org -j DROP
+user_999@user999-VirtualBox:~/Desktop$ sudo iptables -I FORWARD 2 -p tcp -d www.linuxquestions.org -j DROP
+
+---------------------------------------------------
+# Challenge #9
+# Create an iptables rule to drop all incoming packets from 
+# network 27.103.0.0/16. Ensure this rule is the first in the chain.
+
+user_999@user999-VirtualBox:~/Desktop$ sudo iptables -I INPUT 1 -s 27.103.0.0/16
+
+---------------------------------------------------
+# Challenge #10
+# Prevent LAN users from changing the DNS server (set to 8.8.8.8) 
+# by dropping all UDP packets to port 53 (DNS) not destined 
+# for 8.8.8.8. Assume the Linux machine is acting as the router.
+
+user_999@user999-VirtualBox:~/Desktop$ sudo iptables -I FORWARD 1 -p udp --dport 53 ! -d 8.8.8.8 -j DROP
+
+---------------------------------------------------
+# Challenge #11
+# Create a firewall script for a Linux laptop that allows all 
+# outgoing traffic but permits only return incoming traffic. 
+# Ensure no services are running on the laptop.
+
+user_999@user999-VirtualBox:~/Desktop$ sudo iptables -F
+user_999@user999-VirtualBox:~/Desktop$ sudo iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+user_999@user999-VirtualBox:~/Desktop$ sudo iptables -A OUTPUT -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+
+user_999@user999-VirtualBox:~/Desktop$ sudo iptables -P INPUT DROP
+user_999@user999-VirtualBox:~/Desktop$ sudo iptables -P OUTPUT DROP
+
+---------------------------------------------------
+# Challenge #12
+# Allow communication from your Linux host to the 
+# LAN router (MAC address b4:6d:83:77:85) only, and block communication 
+# with other hosts in the same LAN. Do not modify the default policy.
+
+user_999@user999-VirtualBox:~/Desktop$ sudo iptables -A INPUT -m mac ! --mac-source b4:6d:83:77:85:f5 -j DROP
+user_999@user999-VirtualBox:~/Desktop$ sudo iptables -A INPUT -j DROP
+
+# ---------------------------------------------------
+# Challenge #13
+# Write iptables rules to permit outgoing web traffic (TCP ports 80 and 443)
+# only between 10:00 and 18:00 UTC.
+
+user_999@user999-VirtualBox:~/Desktop$ sudo iptables -A OUTPUT -p tcp --dport 80 -m time --timestart 10:00 --timestop 18:00 -j ACCEPT
+user_999@user999-VirtualBox:~/Desktop$ sudo iptables -A OUTPUT -p tcp --dport 443 -m time --timestart 10:00 --timestop 18:00 -j ACCEPT
+user_999@user999-VirtualBox:~/Desktop$ sudo iptables -A OUTPUT -p tcp --dport 80 -j DROP
+user_999@user999-VirtualBox:~/Desktop$ sudo iptables -A OUTPUT -p tcp --dport 443 -j DROP
+
+---------------------------------------------------
+# Challenge #14
+# Enhance the rules from Challenge #13 to permit web traffic only 
+# on weekends between 10:00 and 18:00 UTC.
+
+user_999@user999-VirtualBox:~/Desktop$ sudo -i
+root@user999-VirtualBox:~# iptables -A OUTPUT -p tcp --dport 80 -m time --timestart 10:00 --timestop 18:00 --weekdays Sun,Sat -j ACCEPT
+root@user999-VirtualBox:~# iptables -A OUTPUT -p tcp --dport 443 -m time --timestart 10:00 --timestop 18:00 --weekdays Sun,Sat -j ACCEPT
+root@user999-VirtualBox:~# iptables -A OUTPUT -p tcp --dport 80 -j DROP
+root@user999-VirtualBox:~# iptables -A OUTPUT -p tcp --dport 443 -j DROP
+
+---------------------------------------------------
+
+The iptables tasks involved setting default policies for INPUT and OUTPUT 
+chains to ACCEPT while dropping FORWARD traffic. The current INPUT rules 
+were displayed, and all existing rules were flushed. A rule was created 
+to drop incoming SSH traffic on port 22, and all tables were reset to 
+default to ACCEPT. Incoming packets from specific IP addresses were blocked, 
+outgoing traffic to certain domains was prevented, and packets from a 
+specified network were dropped. Time-based controls were implemented 
+to restrict web traffic during certain hours and on weekends.
+
+---------------------------------------------------
