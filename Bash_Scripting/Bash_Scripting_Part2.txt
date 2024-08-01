@@ -1,0 +1,231 @@
+# Challenges inspired by Andrei Dumitrescu course: Learn Linux by Doing with 5 Projects
+---------------------------------------------------
+# Flow Control, Command Substitution
+
+# Challenge #1
+# Develop a script that accepts an argument and checks whether it is a file.
+
+vim check_.sh
+
+#!/bin/bash
+if [[ -f "$1" ]]; then
+    echo "$1 is a file."
+else    
+    echo "$1 is not a file."
+fi
+
+user_999@user999-VirtualBox:~/Desktop$ chmod +x check_file.sh
+user_999@user999-VirtualBox:~/Desktop$ ./check_file.sh ./challenge4/1 
+./challenge4/1 is a file.
+user_999@user999-VirtualBox:~/Desktop$ ./check_file.sh ./challenge4/one/
+./challenge4/one/ is not a file.
+
+# The script tests successfully if the argument is a file
+
+---------------------------------------------------
+
+# Challenge #2
+# Modify the previous script to ensure it is executed with exactly one argument.
+
+user_999@user999-VirtualBox:~/Desktop$ vim check_file2.sh
+
+#!/bin/bash
+if [[ $# -eq 1 ]]; then
+    if [[ -f "$1" ]]; then
+        echo "$1 is a file."
+    else
+        echo "$1 is not a file."
+    fi
+else
+    echo "Please run the script with exactly one argument. It was run with $# arguments."
+fi
+
+user_999@user999-VirtualBox:~/Desktop$ chmod +x check_file2.sh
+user_999@user999-VirtualBox:~/Desktop$ ./check_file2.sh 234 24
+Please run the script with exactly one argument. It was run with 2 arguments.
+
+# $# returns the number of given arguments
+
+---------------------------------------------------
+
+# Challenge #3
+# Create a script that empties the contents of a text file specified as the script's 
+# argument. Verify that the argument is indeed a file.
+
+user_999@user999-VirtualBox:~/Desktop$ vim empty_file_content.sh
+
+#!/bin/bash
+if [[ -f $1 ]]; 
+then
+    > "$1"
+    echo "$1 contents have been emptied"
+else
+    echo "$1 is not a file"
+fi
+
+user_999@user999-VirtualBox:~/Desktop$ chmod +x empty_file_content.sh
+user_999@user999-VirtualBox:~/Desktop$ echo "something in a file" > testfile22
+
+user_999@user999-VirtualBox:~/Desktop$ ./empty_file_content.sh testfile22 
+testfile22 contents have been emptied
+user_999@user999-VirtualBox:~/Desktop$ cat testfile22
+
+# This script successfully checks whether the argument is a file and empties it.
+
+---------------------------------------------------
+
+# Challenge #4
+# Write a script that blocks incoming packets from an IP address provided by the user.
+# For example, to block packets from 100.0.0.1, use:
+# iptables -I INPUT -s 100.0.0.1 -j DROP
+
+user_999@user999-VirtualBox:~/Desktop$ vim blocking_incoming_packets.sh
+
+#!/bin/bash
+read -p " Enter IP address to drop: " ip
+sudo iptables -I INPUT -s "$ip" -j DROP
+echo "Blocked incoming packets from $ip."
+
+user_999@user999-VirtualBox:~/Desktop$ chmod +x blocking_incoming_packets.sh 
+user_999@user999-VirtualBox:~/Desktop$ sudo ./blocking_incoming_packets.sh
+ Enter IP address to drop: 100.0.0.1
+Blocked incoming packets from 100.0.0.1.
+
+---------------------------------------------------
+
+# Challenge #5
+# Adapt the previous script so that the IP address is specified as the first argument.
+# Ensure that the script is run with exactly one argument.
+
+user_999@user999-VirtualBox:~/Desktop$ vim blocking_incoming_packets2.sh
+
+#!/bin/bash
+if [[ "$#" -eq 1 ]];
+then
+    sudo iptables -I INPUT -s "$1" -j DROP
+    echo "Blocked incoming packets from $1."
+else
+    echo "Please use one IP adress which should be dropped as argument"
+fi
+
+
+user_999@user999-VirtualBox:~/Desktop$ chmod +x blocking_incoming_packets2.sh
+user_999@user999-VirtualBox:~/Desktop$ sudo ./blocking_incoming_packets2.sh 192.170.1.2
+Blocked incoming packets from 192.170.1.2.
+user_999@user999-VirtualBox:~/Desktop$ sudo ./blocking_incoming_packets2.sh 192.170.1.2 25
+Please use one IP adress which should be dropped as argument
+
+# The ip address script drops the argument if it is one
+
+---------------------------------------------------
+
+# Challenge #6
+# Create a script that appends the currently logged-in users and the current date 
+# and time to a file.
+
+user_999@user999-VirtualBox:~/Desktop$ vim append_logged_users.sh
+#!/bin/bash
+echo "$(date): $(who)" >> user_log.txt
+
+user_999@user999-VirtualBox:~/Desktop$ chmod +x append_logged_users.sh
+
+user_999@user999-VirtualBox:~/Desktop$ ./append_logged_users.sh
+user_999@user999-VirtualBox:~/Desktop$ cat user_log.txt 
+lun 15 jul 2024 20:28:43 -05: user_999 tty2         2024-07-13 05:54 (tty2)
+
+# the user_log.txt was created with the loggin information of user_999
+
+---------------------------------------------------
+
+# Challenge #7
+# Develop a script that prompts the user for a character.
+# If the character is Y, output "YES". If it's N, output "NO".
+# Use double quotes for the outputs. Exit the script if the user inputs any other 
+# character.
+
+user_999@user999-VirtualBox:~/Desktop$ vim YN_charResponse.sh
+
+#!/bin/bash
+read -p "Enter a character (Y/N): " char
+if [[ "$char" == "Y" ]]; 
+then
+    echo "YES"
+elif [[ "$char" == "N" ]]; 
+then
+    echo "NO"
+else
+    exit
+fi
+
+user_999@user999-VirtualBox:~/Desktop$ chmod +x YN_charResponse.sh
+user_999@user999-VirtualBox:~/Desktop$ ./YN_charResponse.sh y
+Enter a character (Y/N): Y
+YES
+user_999@user999-VirtualBox:~/Desktop$ ./YN_charResponse.sh
+Enter a character (Y/N): 14
+user_999@user999-VirtualBox:~/Desktop$ ./YN_charResponse.sh
+Enter a character (Y/N): N
+NO
+
+# The Script recognises a Y and N and responses with the full word
+
+---------------------------------------------------
+
+# Challenge #8
+# Modify the previous script to handle lowercase inputs: if the character is Y or y,
+# display "YES". If it's N or n, show "NO". Exit if any other character is entered. 
+# Use the OR operator (||) for the lowercase checks.
+
+user_999@user999-VirtualBox:~/Desktop$ vim YN_charResponse2.sh
+
+#!/bin/bash
+read -p "Enter a character (Y/N): " char
+if [[ "$char" == "Y" ]] || [[ "$char" == "y" ]]; 
+then
+    echo "YES"
+elif [[ "$char" == "N" ]] || [[ "$char" == "n" ]]; 
+then
+    echo "NO"
+else
+    exit
+fi
+
+user_999@user999-VirtualBox:~/Desktop$ chmod +x YN_charResponse2.sh
+
+user_999@user999-VirtualBox:~/Desktop$ ./YN_charResponse2.sh 
+Enter a character (Y/N): y
+YES
+
+# This script also recognices a small y and n 
+
+--------------------------------------------------
+
+# Challenge #9
+# Create a script that accepts exactly two arguments. The first should be a shell 
+# command and the second a string. The script will check if the string appears 
+# in the command's output.
+
+user_999@user999-VirtualBox:~/Desktop$ vim string_in_commands_output.sh
+#!/bin/bash
+if [[ "$#" -ne 2 ]]; 
+then
+    echo "Two arguments please"
+    exit
+else
+    search_string="'$1'"
+    if [[ "$search_string" == *"$2"* ]]; 
+then
+        echo "$2 belongs to the output of $1"
+    else
+        echo "$2 is not within the output of $1"
+    fi
+fi
+
+user_999@user999-VirtualBox:~/Desktop$ chmod +x string_in_commands_output.sh
+user_999@user999-VirtualBox:~/Desktop$ ./string_in_commands_output.sh "echo checking this script" "this"
+this belongs to the output of echo checking this script
+
+# The script checks correctly whether the string appears in the command's output
+
+---------------------------------------------------
+
