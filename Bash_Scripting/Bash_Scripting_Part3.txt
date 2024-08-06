@@ -1,0 +1,316 @@
+# Challenges inspired by Andrei Dumitrescu course: Learn Linux by Doing with 5 Projects
+---------------------------------------------------
+# Loops in Bash: for, while
+
+
+# Challenge #1
+# Given the variable friends="Anne John Jenna Arena Paul Dan", write a script that 
+# uses a for loop to greet each friend in the list.
+
+user_999@user999-VirtualBox:~/Desktop$ vim greet_friends.sh
+
+#!/bin/bash
+friends="Anne John Jenna Arena Paul Dan"
+for friend in $friends
+do
+    echo "Hello, $friend"
+done
+
+user_999@user999-VirtualBox:~/Desktop$ chmod +x greet_friends.sh
+user_999@user999-VirtualBox:~/Desktop$ ./greet_friends.sh
+Hello, Anne
+Hello, John
+Hello, Jenna
+Hello, Arena
+Hello, Paul
+Hello, Dan
+
+---------------------------------------------------
+
+# Challenge #2
+# Create a script that prompts the user for a file and verifies that it’s a valid file.
+# Ask for two positive integers, n and m.
+# Display the lines from line number n to m, inclusive.
+
+user_999@user999-VirtualBox:~/Desktop$ vim view_chosen_lines.sh
+
+#!/bin/bash
+read -p "Enter the file name: " filename
+if [[ -f "$filename" ]]; then
+    read -p "Enter the starting line number n: " n
+    read -p "Enter the ending line number m: " m
+    # number of lines to display
+    q=$((m - n + 1))
+    tail -n +"$n" "$filename" | head -n "$q"
+else
+    echo "$filename is not a file."
+fi
+
+user_999@user999-VirtualBox:~/Desktop$ chmod +x view_chosen_lines.sh 
+
+user_999@user999-VirtualBox:~/Desktop$ ./view_chosen_lines.sh
+Enter the file name: check_file2.sh
+Enter the starting line number n: 6   
+Enter the ending line number m: 10
+	if [[ -f "$1" ]]; then
+		    echo "$1 is a file."
+	    else    
+			echo "$1 is not a file."
+
+# the script returns the correct chosen lines
+
+---------------------------------------------------
+
+# Challenge #3
+# Write a script that outputs all odd numbers between 1 and 50.
+
+user_999@user999-VirtualBox:~/Desktop$ vim odd_numbers.sh
+user_999@user999-VirtualBox:~/Desktop$ chmod +x odd_numbers.sh
+
+user_999@user999-VirtualBox:~/Desktop$ ./odd_numbers.sh 
+1
+3
+5
+7
+9
+11
+13
+...
+
+# The script outputs all odd numbers between 1 and 50
+
+---------------------------------------------------
+
+# Challenge #4
+# Develop a script that creates five text files in the current directory.
+
+user_999@user999-VirtualBox:~/Desktop$ vim create_five_files.sh
+
+
+user_999@user999-VirtualBox:~/Desktop$ chmod +x create_five_files.sh
+
+# 5 files are actually created when executing the script
+
+
+---------------------------------------------------
+
+# Challenge #5
+# Create a script that prompts the user for a number n, then generates n text 
+# files in the current directory.
+
+user_999@user999-VirtualBox:~/Desktop$ vim create_n_files.sh
+
+#!/bin/bash
+read -p "Enter the number of files to create: " n
+for (( i=1; i<=n; i++ ))
+do
+        touch "a_file_$i.txt"
+done
+
+user_999@user999-VirtualBox:~/Desktop$ chmod +x create_n_files.sh
+
+user_999@user999-VirtualBox:~/Desktop$ ./create_n_files.sh 
+Enter the number of files to create: 3
+user_999@user999-VirtualBox:~/Desktop$ ls -lh
+total 100K
+-rw-rw-r-- 1 user_999 user_999 4,6K jul 13 14:28 1
+-rw-rw-r-- 1 user_999 user_999 4,7K jul 13 14:29 2
+-rw-rw-r-- 1 user_999 user_999    0 jul 16 11:30 a_file_1.txt
+-rw-rw-r-- 1 user_999 user_999    0 jul 16 11:30 a_file_2.txt
+-rw-rw-r-- 1 user_999 user_999    0 jul 16 11:30 a_file_3.txt
+
+# The desired number of files is created through the script
+
+---------------------------------------------------
+
+# Challenge #6
+# Enhance the previous script by adding a condition that requires the user to 
+# enter a positive integer less than 100.
+
+user_999@user999-VirtualBox:~/Desktop$ vim create_n_files_limited.sh
+
+#!/bin/bash
+read -p "Enter the number of files to create (less than 100): " n
+if [[ $n -le 0 ]] || [[ $n -ge 100 ]]; then
+    echo "Please enter a positive integer less than 100; you entered $n"
+    exit
+fi
+for (( i=1; i<=n; i++ )); do
+    touch "a_file_$i.txt"
+done
+
+user_999@user999-VirtualBox:~/Desktop$ chmod +x create_n_files_limited.sh
+
+user_999@user999-VirtualBox:~/Desktop$ ./create_n_files_limited.sh 
+Enter the number of files to create (less than 100): 333
+
+user_999@user999-VirtualBox:~/Desktop$ ./create_n_files_limited.sh
+Enter the number of files to create (less than 100): 2
+user_999@user999-VirtualBox:~/Desktop$ ls -lh
+total 104K
+-rw-rw-r-- 1 user_999 user_999 4,6K jul 13 14:28 1
+-rw-rw-r-- 1 user_999 user_999 4,7K jul 13 14:29 2
+-rw-rw-r-- 1 user_999 user_999    0 jul 16 11:41 a_file_1.txt
+-rw-rw-r-- 1 user_999 user_999    0 jul 16 11:41 a_file_2.txt
+
+# No files are created if the number is more then 99 so the script works well
+
+---------------------------------------------------
+
+# Challenge #7
+# Modify the previous script to create a new file every 3 seconds, with each 
+# file named in the format current_minute_second.
+
+user_999@user999-VirtualBox:~/Desktop$ cp create_n_files_limited.sh create_n_files_limited_3sec.sh
+user_999@user999-VirtualBox:~/Desktop$ vim create_n_files_limited_3sec.sh
+
+#!/bin/bash
+read -p "Enter the number of files to create (less than 100): " n
+if [[ $n -le 0 ]] || [[ $n -ge 100 ]]; then
+    echo "Please enter a positive integer less than 100; you entered $n"
+    exit
+fi
+for (( i=1; i<=n; i++ )); do
+    touch "a_file_$i.txt"
+done
+i=0
+while [[ $i -lt $n ]]; do
+    current_time=$(date +"%M_%S")
+    touch "a_file_$current_time.txt"
+    sleep 3
+    ((i++))
+done
+
+user_999@user999-VirtualBox:~/Desktop$ chmod +x create_n_files_limited_3sec.sh
+
+user_999@user999-VirtualBox:~/Desktop$ rm a_file_{1..4}.txt
+user_999@user999-VirtualBox:~/Desktop$ ls -lh
+total 108K
+-rw-rw-r-- 1 user_999 user_999 4,6K jul 13 14:28 1
+-rw-rw-r-- 1 user_999 user_999 4,7K jul 13 14:29 2
+-rw-rw-r-- 1 user_999 user_999    0 jul 16 11:58 a_file_58_29.txt
+-rw-rw-r-- 1 user_999 user_999    0 jul 16 11:58 a_file_58_32.txt
+-rw-rw-r-- 1 user_999 user_999    0 jul 16 11:58 a_file_58_36.txt
+-rw-rw-r-- 1 user_999 user_999    0 jul 16 11:58 a_file_58_39.txt
+-rw-rw-r-- 1 user_999 user_999    0 jul 16 11:58 a_file_58_42.txt
+
+# The files were created one by one every three seconds
+
+---------------------------------------------------
+
+# Challenge #8
+# Write a script that accepts multiple IP addresses as arguments and sends one 
+# ping packet to each.
+
+user_999@user999-VirtualBox:~/Desktop$ vim ping_various_ips.sh
+
+#!/bin/bash
+for ip in $@
+do      
+        ping -c 1 $ip
+        echo "----------------------"
+done
+
+user_999@user999-VirtualBox:~/Desktop$ chmod +x ping_various_ips.sh 
+
+user_999@user999-VirtualBox:~/Desktop$ ./ping_various_ips.sh 192.168.111.111 8.8.8.8
+PING 192.168.111.111 (192.168.111.111) 56(84) bytes of data.
+--- 192.168.111.111 ping statistics ---
+1 packets transmitted, 0 received, 100% packet loss, time 0ms
+----------------------
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=109 time=21.1 ms
+--- 8.8.8.8 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 21.058/21.058/21.058/0.000 mipis
+----------------------
+
+# The ping commands were executed
+
+---------------------------------------------------
+
+# Challenge #9
+# Change the previous script so it reads IP addresses from a text file provided 
+# by the user.
+
+
+user_999@user999-VirtualBox:~/Desktop$ vim ping_various_ips_from_f.sh
+
+#!/bin/bash
+read -p "Enter the filename containing IP addresses: " filename
+if [[ -f "$filename" ]]; then
+    for ip in $(cat "$filename"); do
+        ping -c 1 "$ip"
+        echo "----------------------"
+    done
+else
+    echo "$filename is not a valid file."
+fi
+
+user_999@user999-VirtualBox:~/Desktop$ chmod +x ping_various_ips_from_f.sh
+
+user_999@user999-VirtualBox:~/Desktop$ ./ping_various_ips_from_f.sh
+Enter the filename containing IP addresses: ip_addresses.txt
+PING 192.168.111.111 (192.168.111.111) 56(84) bytes of data.
+--- 192.168.111.111 ping statistics ---
+1 packets transmitted, 0 received, 100% packet loss, time 0ms
+----------------------
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=109 time=23.0 ms
+--- 8.8.8.8 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 22.965/22.965/22.965/0.000 ms
+----------------------
+
+# The script successfully used the ips given in a string
+
+---------------------------------------------------
+
+# Challenge #10
+# Create a script that accepts three arguments: a file extension, a source 
+# directory, and a destination directory. The script should copy all files 
+# with that extension from the source to the destination directory.
+# For example: ./copy_files.sh png ~/images ~/backup/images.
+
+user_999@user999-VirtualBox:~/Desktop$ vim copy_files_by_extention.sh
+
+#!/bin/bash
+if [[ $# -ne 3 ]]; then
+    echo "Correct usage: $0 <file_extension> <source_directory> <destination_directory>"
+    exit 1
+fi
+extension="$1"
+source_dir="$2"
+dest_dir="$3"
+if [[ ! -d "$source_dir" ]]; then
+    echo "Source directory does not exist."
+    exit 1
+fi
+if [[ ! -d "$dest_dir" ]]; then
+    echo "Creating destination directory, because it does not exist."
+    mkdir -p "$dest_dir"
+fi
+for file in "$source_dir"/*."$extension"; do
+    if [[ -f "$file" ]]; then
+        cp "$file" "$dest_dir"
+    fi
+done
+
+
+
+user_999@user999-VirtualBox:~/Desktop$ chmod +x copy_files_by_extention.sh
+
+user_999@user999-VirtualBox:~/Desktop$ mkdir test_folder
+user_999@user999-VirtualBox:~/Desktop$ vim ./test_folder/filetocp.txt
+
+user_999@user999-VirtualBox:~/Desktop$ ./copy_files_by_extention.sh txt ./test_folder/ ./new_destination_folder/
+Creating destination directory, because it does not exist.
+Files copied successfully.
+user_999@user999-VirtualBox:~/Desktop$ ls ./new_destination_folder/
+filetocp.txt
+
+# the script successfully creates the new directory from source folder with the wanted extention
+
+
+---------------------------------------------------
+---------------------------------------------------
