@@ -1,0 +1,234 @@
+# Challenges inspired by Andrei Dumitrescu course: Learn Linux by Doing with 5 Projects
+---------------------------------------------------
+
+# Functions and Menus
+
+# Challenge #1
+# Define a function called now that prints the current date and time 
+# in the format: YYYY-MM-DD HH. Invoke the function.
+
+user_999@user999-VirtualBox:~/Desktop$ vim current_time.sh
+
+#!/bin/bash
+function now () {
+        echo "$(date +%F\ %H:%M:%S)"
+}
+
+now
+
+
+user_999@user999-VirtualBox:~/Desktop$ chmod +x current_time.sh 
+
+user_999@user999-VirtualBox:~/Desktop$ ./current_time.sh 
+2024-07-16 16:29:53
+
+# The current time is displayed well
+
+---------------------------------------------------
+
+# Challenge #2
+# Create a function called rectangle_area that takes two arguments: width and height.
+# This function should calculate and print the area of the rectangle.
+# Call the function with various arguments.
+
+user_999@user999-VirtualBox:~/Desktop$ vim rectangle_area
+user_999@user999-VirtualBox:~/Desktop$ chmod +x rectangle_area
+
+#!/bin/bash
+
+rectangle_area () {
+        width=$1
+        height=$2
+        result=$((width * height))
+        echo "The area of the rectangle with width=$1 and height=$2 is $result."
+}
+
+rectangle_area 5 10
+rectangle_area 7 3
+
+user_999@user999-VirtualBox:~/Desktop$ chmod +x rectangle_area
+
+user_999@user999-VirtualBox:~/Desktop$ ./rectangle_area
+The area of the rectangle with width=5 and height=10 is 50
+The area of the rectangle with width=7 and height=3 is 21
+
+# The function is executed successfully inside the script
+
+---------------------------------------------------
+
+# Challenge #3
+# Construct a Bash menu with the following options:
+# Display Date and Time
+# List logged-in users
+# Show disk usage
+# Change the menu prompt to read "Choose:" and implement each option using 
+# if...elif...else statements.
+
+user_999@user999-VirtualBox:~/Desktop$ vim bash_menu.sh
+user_999@user999-VirtualBox:~/Desktop$ chmod +x bash_menu.sh 
+
+#!/bin/bash
+while true; do
+    echo "Menu:"
+    echo "1. Display Date and Time"
+    echo "2. List logged-in users"
+    echo "3. Show disk usage"
+    echo "4. Exit"
+    read -p "Choose: " choice
+    if [[ "$choice" -eq 1 ]]; then
+        date
+    elif [[ "$choice" -eq 2 ]]; then
+        who
+    elif [[ "$choice" -eq 3 ]]; then
+        df -h
+    elif [[ "$choice" -eq 4 ]]; then
+        exit
+    else
+        echo "Invalid option. Please choose again."
+    fi
+done
+
+user_999@user999-VirtualBox:~/Desktop$ chmod +x bash_menu.sh
+
+user_999@user999-VirtualBox:~/Desktop$ ./bash_menu.sh
+Menu:
+1. Display Date and Time
+2. List logged-in users
+3. Show disk usage
+4. Exit
+Choose: 44
+Invalid option. Please choose again.
+Menu:
+1. Display Date and Time
+2. List logged-in users
+3. Show disk usage
+4. Exit
+Choose: 1
+mar 16 jul 2024 19:18:16 -05
+Menu:
+1. Display Date and Time
+2. List logged-in users
+3. Show disk usage
+4. Exit
+Choose: 2
+user_999 tty2         2024-07-13 05:54 (tty2)
+Menu:
+1. Display Date and Time
+2. List logged-in users
+3. Show disk usage
+4. Exit
+Choose: 3
+Filesystem      Size  Used Avail Use% Mounted on
+tmpfs           196M  1,5M  195M   1% /run
+/dev/sda3        20G   14G  4,8G  74% /
+tmpfs           980M     0  980M   0% /dev/shm
+tmpfs           5,0M  4,0K  5,0M   1% /run/lock
+/dev/sda2       512M  6,1M  506M   2% /boot/efi
+tmpfs           196M  104K  196M   1% /run/user/1000
+/dev/sr0         51M   51M     0 100% /media/user_999/VBox_GAs_7.0.12
+Menu:
+1. Display Date and Time
+2. List logged-in users
+3. Show disk usage
+4. Exit
+Choose: 4
+
+# The bash menu is shown correctly and the choices work as well
+
+---------------------------------------------------
+
+# Challenge #4
+# Revise the previous menu solution to utilize a case statement instead of 
+if...elif...else for the menu entries.
+
+user_999@user999-VirtualBox:~/Desktop$ cp bash_menu.sh bash_manu_case.sh
+user_999@user999-VirtualBox:~/Desktop$ vim bash_menu_case.sh
+
+#!/bin/bash
+while true; do
+    echo "Menu:"
+    echo "1. Display Date and Time"
+    echo "2. List logged-in users"
+    echo "3. Show disk usage"
+    echo "4. Exit"
+    read -p "Choose: " choice
+    case $choice in
+        1)
+            date
+            ;;
+        2)
+            who
+            ;;
+        3)
+            df -h
+            ;;
+        4)
+            exit
+            ;;
+        *)
+            echo "Invalid option. Please choose again."
+            ;;
+    esac
+done
+
+user_999@user999-VirtualBox:~/Desktop$ chmod +x bash_menu_case.sh
+
+user_999@user999-VirtualBox:~/Desktop$ ./bash_menu_case.sh
+Menu:
+1. Display Date and Time
+2. List logged-in users
+3. Show disk usage
+4. Exit
+Choose: 1
+mié 17 jul 2024 08:59:49 -05
+Menu:
+1. Display Date and Time
+2. List logged-in users
+3. Show disk usage
+4. Exit
+Choose: 2
+user_999 tty2         2024-07-13 05:54 (tty2)
+Menu:
+1. Display Date and Time
+2. List logged-in users
+3. Show disk usage
+4. Exit
+Choose: 3
+Filesystem      Size  Used Avail Use% Mounted on
+tmpfs           196M  1,5M  195M   1% /run
+/dev/sda3        20G   14G  4,8G  74% /
+tmpfs           980M     0  980M   0% /dev/shm
+tmpfs           5,0M  4,0K  5,0M   1% /run/lock
+/dev/sda2       512M  6,1M  506M   2% /boot/efi
+tmpfs           196M  104K  196M   1% /run/user/1000
+/dev/sr0         51M   51M     0 100% /media/user_999/VBox_GAs_7.0.12
+Menu:
+1. Display Date and Time
+2. List logged-in users
+3. Show disk usage
+4. Exit
+Choose: 23
+Invalid option. Please choose again.
+Menu:
+1. Display Date and Time
+2. List logged-in users
+3. Show disk usage
+4. Exit
+Choose: 4
+
+# This bash menu with the case statements also works well
+
+---------------------------------------------------
+
+In these exercises, various Bash scripts were created to explore functions and
+ menus. The first challenge involved defining a now function that displayed the 
+current date and time. In the second challenge, a rectangle_area function was 
+implemented to calculate the area based on given dimensions. 
+The third challenge featured a menu created with if...elif...else statements to 
+show the date, list logged-in users, and display disk usage. 
+Finally, the menu was revised in the fourth challenge to utilize case statements 
+for improved readability. 
+All scripts were successfully executed, and tested to improve my Bash scripting skills.
+
+---------------------------------------------------
+
