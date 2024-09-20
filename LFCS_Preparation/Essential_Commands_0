@@ -1,0 +1,85 @@
+# Questions and Answers to prepare for LFCS Exam 
+
+Q1
+What command would you use to locate files and directories that were modified within the last 5 minutes in the ./finding_files/ folder?
+
+It should also show the item that was modified.
+
+A1
+find ./finding_files/ -mmin -5
+
+Q2
+Rearrange the contents of /finding_files/78_to_sort alphabetically, remove duplicates, and ignore case sensitivity.
+
+After that, save the final sorted list in ./78sorted
+
+A2
+sort -duf /finding_files/78_to_sort > ./78sorted
+rm ./78sorted
+
+Q3
+What is the command to locate files in /srv/SAMPLE002 that haven't been accessed in over 30 days and delete them?
+
+A3
+find /srv/SAMPLE002 -type f -atime +30 -exec rm {} +
+
+Q4
+How can you locate all executable files in /srv/SAMPLE002 and remove them?
+
+A4
+find /srv/SAMPLE002 -type f -executable -exec rm {} +
+
+Q5
+How do you identify and remove all empty directories in /srv/SAMPLE002?
+
+A5
+find /srv/SAMPLE002 -type d -empty -delete
+
+Q6
+Display the contents of the archive ./finding_files/89_task_list_archive_content.tar and append the output to ./storing_found/89_list_tar_output.txt
+
+Then confirm the contents with cat; it should show 90_create_tar_from_this_log
+
+A6
+tar tPf ./finding_files/89_task_list_archive_content.tar >> ./storing_found/89_list_tar_output.txt
+
+(Not sure if P is necessary, tPf)
+
+cat ./storing_found/89_list_tar_output.txt
+
+Q7
+We briefly covered setuid, setgid, and the sticky bit special permissions. setuid stands for set user id, setgid for set group id.
+
+Create a directory ./tmp_perm/
+
+Set the permissions for setuid, setgid, and the sticky bit on the ./tmp_perm/ directory.
+
+A7
+mkdir tmp_perm/
+
+chmod u+s,g+s,o+t ./tmp_perm/
+
+rm -r tmp_perm
+
+Q8
+How do you make searches case-insensitive in vim?
+
+You can verify this in ./finding_files/96_vi_practice_file
+
+A8
+/this\c
+
+\c
+
+Q9
+How do you index the man pages so they can be searched using apropos?
+
+A9
+Use the command:
+sudo mandb
+
+Q10
+How can you compress the tar archive /opt/SAMPLE0001.tar using bzip2 compression?
+
+A10
+bzip2 /opt/SAMPLE0001.tar
