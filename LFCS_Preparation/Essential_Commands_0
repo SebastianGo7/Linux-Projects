@@ -181,3 +181,64 @@ touch .hidden_textfile
 
 ls -la
 After checking, delete the hidden text file.
+
+Q21
+Create a compressed tar archive 90logs.tar.gz of the ./finding_files/90_create_tar_from_this_log directory.
+
+A21
+tar -czf 90logs.tar.gz ./finding_files/90_create_tar_from_this_log
+
+The dash in front of czf is not necessary.
+Then remove the created file: 90logs.tar.gz
+
+Q22
+Copy the file to the current location:
+cp ./finding_files/81_txt_to_gzip_cp_first.txt ./
+
+Create a gzip archive of that copied file in the current directory.
+
+A22
+gzip 81_txt_to_gzip_cp_first.txt
+
+Then delete this file.
+
+Q23
+Copy ./finding_files/canda_exercise to ./tmp_files_copied_for_practice/canda_exercise_tmp.
+
+Replace "canda" with "canada" in the text file called canda_exercise_tmp.
+
+Then check and remove the file.
+
+A23
+sed -i 's/canda/canada/g' ./tmp_files_copied_for_practice/canda_exercise_tmp
+
+cat ./tmp_files_copied_for_practice/canda_exercise_tmp
+rm ./tmp_files_copied_for_practice/canda_exercise_tmp
+
+(The g is for global search and replace.)
+
+Q24
+Copy ./finding_files/95_enabled_disabled to ./tmp_files_copied_for_practice/95_tmp.
+
+Change all values "enabled" to "disabled" in the ./tmp_files_copied_for_practice/95_tmp config file.
+
+Then check the file.
+
+A24
+sed -i 's/enabled/disabled/g' ./tmp_files_copied_for_practice/95_tmp
+
+cat ./tmp_files_copied_for_practice/95_tmp
+
+Q25
+Copy ./finding_files/94_enabled_disabled to ./tmp_files_copied_for_practice/94_tmp.
+
+While ignoring case sensitivity, change all values "disabled" to "enabled" in the ./tmp_files_copied_for_practice/94_tmp.
+
+For example, strings like "disabled," "DISABLED," "Disabled," etc., must match and should be replaced.
+
+A25
+sed -i 's/disabled/enabled/gi' ./tmp_files_copied_for_practice/94_tmp
+
+cat ./tmp_files_copied_for_practice/94_tmp
+
+rm ./tmp_files_copied_for_practice/94_tmp
