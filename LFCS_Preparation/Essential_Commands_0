@@ -136,44 +136,6 @@ tar xf ./finding_files/83_to_extract.tar.gz -C ./
 
 Then remove the created file.
 
-Q16
-Execute the script ./finding_files/85_script_with_errors and append all errors only to ./storing_found/85_errors_log.
-
-A16
-./finding_files/85_script_with_errors 2>> ./storing_found/85_errors_log
-
-Q17
-Create two bzip2 archives from /finding_files/84_file_for_bzip.txt, preserving the original file.
-
-By the end of the exercise, you should have:
--- one created in ./finding_files called 84_file_for_bz
-and
--- one redirected to the current directory named 84.bz2
-and the original file.
-
-A17
-bzip2 --keep ./finding_files/84_file_for_bzip.txt > 84.bz2
-
-Then delete both created files.
-
-Q18
-Create a tar archive tmp_90_logs.tar (under the current directory) of the ./finding_files/90_create_tar_from_this_log directory.
-
-A18
-tar -cf tmp_90_logs.tar ./finding_files/90_create_tar_from_this_log
-
-rm tmp_90_logs.tar
-
-Q19
-Create a newtar.tar archive of ./finding_files/82_simple_txtfile.txt in the current location.
-
-A19
-tar -cf newtar.tar ./finding_files/82_simple_txtfile.txt
-
-Q20
-Create a hidden text file named hidden.txt first.
-
-Then list hidden files in the directory.
 
 A20
 touch .hidden_textfile
