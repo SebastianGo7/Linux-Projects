@@ -83,3 +83,100 @@ How can you compress the tar archive /opt/SAMPLE0001.tar using bzip2 compression
 
 A10
 bzip2 /opt/SAMPLE0001.tar
+
+Q11
+Find files under /finding_files/. Look for a file that is exactly 167 bytes or exactly 188 bytes.
+
+(Should show 2 files)
+
+A11
+find ./finding_files/ \( -size 167c -o -size 188c \)
+
+Q12
+Find files under /finding_files/. Look for a file that has permission 402 in octal or permission 574 in octal.
+
+(Should show 2 files)
+
+A12
+find ./finding_files/ -perm 402 -o -perm 574
+
+Q13
+Find files/directories under ./findingFiles that the group can write to, but others cannot read or write to.
+
+Save the list of files/directories, appending it to ./storing_found/exercise_rules.txt.
+
+Then append the date and newline to the same file:
+now=$(date)
+echo -e $now "\n"
+
+Should find this file:
+user_group_all_perm.txt
+
+A13
+sudo find ./finding_files -perm -g=w ! -perm /o=rw >> ./storing_found/exercise_rules.txt
+
+now=$(date)
+echo -e $now "\n" >> ./storing_found/exercise_rules.txt
+
+Q14
+Find all files whose permissions are 0777 in the /var directory.
+
+How many such files did you find?
+
+(Should be 2)
+
+A14
+sudo find /var -type f -perm 0777 -print
+
+Q15
+Extract the contents of ./finding_files/83_to_extract.tar.gz to the current ./ directory using tar.
+
+A15
+tar xf ./finding_files/83_to_extract.tar.gz -C ./
+
+Then remove the created file.
+
+Q16
+Execute the script ./finding_files/85_script_with_errors and append all errors only to ./storing_found/85_errors_log.
+
+A16
+./finding_files/85_script_with_errors 2>> ./storing_found/85_errors_log
+
+Q17
+Create two bzip2 archives from /finding_files/84_file_for_bzip.txt, preserving the original file.
+
+By the end of the exercise, you should have:
+-- one created in ./finding_files called 84_file_for_bz
+and
+-- one redirected to the current directory named 84.bz2
+and the original file.
+
+A17
+bzip2 --keep ./finding_files/84_file_for_bzip.txt > 84.bz2
+
+Then delete both created files.
+
+Q18
+Create a tar archive tmp_90_logs.tar (under the current directory) of the ./finding_files/90_create_tar_from_this_log directory.
+
+A18
+tar -cf tmp_90_logs.tar ./finding_files/90_create_tar_from_this_log
+
+rm tmp_90_logs.tar
+
+Q19
+Create a newtar.tar archive of ./finding_files/82_simple_txtfile.txt in the current location.
+
+A19
+tar -cf newtar.tar ./finding_files/82_simple_txtfile.txt
+
+Q20
+Create a hidden text file named hidden.txt first.
+
+Then list hidden files in the directory.
+
+A20
+touch .hidden_textfile
+
+ls -la
+After checking, delete the hidden text file.
