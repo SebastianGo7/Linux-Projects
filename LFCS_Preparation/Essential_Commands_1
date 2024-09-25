@@ -234,3 +234,97 @@ How would you redirect the standard output of the command grep sshd /etc/* to /r
 
 A45
 grep sshd /etc/* > /root/redirect/stdout.txt
+
+Q46
+How would you redirect the standard error output of the command grep sshd /etc/* to /root/redirect/stderr.txt?
+
+A46
+grep sshd /etc/* 2> /root/redirect/stderr.txt
+
+Q47
+How can you redirect both standard output and standard error of the command grep sshd /etc/* to /root/redirect/stdout_and_stderr.txt?
+
+A47
+grep sshd /etc/* > /root/redirect/stdout_and_stderr.txt 2>&1
+
+Q48
+How do you find all lines in /usr/share/dict/book that start with "Jack" and end with "are," saving the results to /root/found/22/jack.txt?
+
+A48
+grep "^Jack.*are$" /usr/share/dict/book > /root/found/22/jack.txt
+
+Q49
+How do you search for all lines in /usr/share/dict/book that begin with "this" or "That," regardless of case, and save those lines to /root/found/22/this_or_that.txt?
+
+A49
+grep -iE "^(this|That)" /usr/share/dict/book > /root/found/22/this_or_that.txt
+
+Q50
+In this task, you will work with the /opt/services.txt file.
+A. First, use the appropriate command to filter and display only the commented lines from this file, saving the output to /opt/commented.txt.
+B. Replace every instance of the word SSH in /opt/services.txt with the word NULL.
+
+A50
+grep '^#' /opt/services.txt > /opt/commented.txt
+sed -i 's/SSH/NULL/g' /opt/services.txtQ41
+What command would you use to copy files owned by user2 from ./playground/filepool to ./playground/user2 that have permissions set to 1234?
+
+A41
+find ./playground/filepool -user user2 -perm 1234 -exec cp -a {} ./playground/user2/ ;
+
+Q42
+Which command would you use to locate all files in ./playground/filepool owned by user3 that are executable by anyone (owner, group, or others)?
+
+A42
+find ./playground/filepool -user user3 -perm /111
+
+Q43
+How can you find all lines in the /var/log/secure file that contain the term "FAILED" followed by "linda" and save this output to /root/search/6/securefile.txt?
+
+A43
+grep -E "FAILED.*linda" /var/log/secure > /root/search/6/securefile.txt
+
+Q44
+What command would you use to identify all files in /etc that exceed 1MB in size and write their absolute paths to /root/found/8/big-files.txt?
+
+A44
+find /etc -size +1M -type f -exec realpath {} + > /root/found/8/big-files.txt
+
+Q45
+How would you redirect the standard output of the command grep sshd /etc/* to /root/redirect/stdout.txt?
+
+A45
+grep sshd /etc/* > /root/redirect/stdout.txt
+
+Q46
+How would you redirect the standard error output of the command grep sshd /etc/* to /root/redirect/stderr.txt?
+
+A46
+grep sshd /etc/* 2> /root/redirect/stderr.txt
+
+Q47
+How can you redirect both standard output and standard error of the command grep sshd /etc/* to /root/redirect/stdout_and_stderr.txt?
+
+A47
+grep sshd /etc/* > /root/redirect/stdout_and_stderr.txt 2>&1
+
+Q48
+How do you find all lines in /usr/share/dict/book that start with "Jack" and end with "are," saving the results to /root/found/22/jack.txt?
+
+A48
+grep "^Jack.*are$" /usr/share/dict/book > /root/found/22/jack.txt
+
+Q49
+How do you search for all lines in /usr/share/dict/book that begin with "this" or "That," regardless of case, and save those lines to /root/found/22/this_or_that.txt?
+
+A49
+grep -iE "^(this|That)" /usr/share/dict/book > /root/found/22/this_or_that.txt
+
+Q50
+In this task, you will work with the /opt/services.txt file.
+A. First, use the appropriate command to filter and display only the commented lines from this file, saving the output to /opt/commented.txt.
+B. Replace every instance of the word SSH in /opt/services.txt with the word NULL.
+
+A50
+grep '^#' /opt/services.txt > /opt/commented.txt
+sed -i 's/SSH/NULL/g' /opt/services.txt
