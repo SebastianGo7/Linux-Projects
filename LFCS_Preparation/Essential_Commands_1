@@ -204,3 +204,33 @@ How do you find all files in ./playground/filepool that have no assigned user an
 
 A40
 find ./playground/filepool -nouser > ./playground/listfile.txt
+
+Q41
+What command would you use to copy files owned by user2 from ./playground/filepool to ./playground/user2 that have permissions set to 1234?
+
+A41
+find ./playground/filepool -user user2 -perm 1234 -exec cp -a {} ./playground/user2/ ;
+
+Q42
+Which command would you use to locate all files in ./playground/filepool owned by user3 that are executable by anyone (owner, group, or others)?
+
+A42
+find ./playground/filepool -user user3 -perm /111
+
+Q43
+How can you find all lines in the /var/log/secure file that contain the term "FAILED" followed by "linda" and save this output to /root/search/6/securefile.txt?
+
+A43
+grep -E "FAILED.*linda" /var/log/secure > /root/search/6/securefile.txt
+
+Q44
+What command would you use to identify all files in /etc that exceed 1MB in size and write their absolute paths to /root/found/8/big-files.txt?
+
+A44
+find /etc -size +1M -type f -exec realpath {} + > /root/found/8/big-files.txt
+
+Q45
+How would you redirect the standard output of the command grep sshd /etc/* to /root/redirect/stdout.txt?
+
+A45
+grep sshd /etc/* > /root/redirect/stdout.txt
