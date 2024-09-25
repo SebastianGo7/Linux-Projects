@@ -101,3 +101,58 @@ D
 Copy all files modified less than 1 hour ago:
 sudo find ./collection/ -mmin -60 -type f -exec cp --target-directory=/opt/oldfiles/ {} + ;
 
+Q31
+Make sure you're logged in as the user called bob and perform the task using only bob.
+
+A31
+Find all directories in the /home/bob/library/ directory, redirecting errors to /home/bob/errors.out.
+Redirect standard messages (non-errors) to /home/bob/standard.out.
+Perform the same search, redirecting both errors and standard messages to /home/bob/all.out.
+
+find /home/bob/library/ -type d 2> /home/bob/errors.out
+find /home/bob/library/ -type d > /home/bob/standard.out
+find /home/bob/library/ -type d > /home/bob/all.out 2>&1
+
+Q32
+Work with the /opt/services.txt file.
+
+A32
+Filter and save only the commented lines (starting with #) to /opt/commented.txt.
+Change occurrences of "SSH" to "NULL" in /opt/services.txt.
+
+sudo grep '^#' /opt/services.txt > /opt/commented.txt
+sudo sed -i 's/SSH/NULL/g' /opt/services.txt
+
+Q33
+In your home directory, find and manipulate files in the collection directory.
+
+A33
+Find files exactly 1 byte in size and move them to /opt/foundfiles/.
+Find files containing the letter "e" or "E" and move them to /opt/foundfiles/.
+Find a file not readable by other users and restore +r permission.
+
+find /home/bob/collection/ -type f -size 1c -exec mv {} /opt/foundfiles/ ;
+grep -irl '[eE]' /home/bob/collection/ | xargs -I {} mv {} /opt/foundfiles/
+find /home/bob/collection/ -type f -perm -640 -exec chmod o+r {} ;
+
+Q34
+In your home directory, you will find two files: me1_q9_file.tar.gz and me1_q9_file.zip.
+
+A34
+Extract me1_q9_file.tar.gz into ./yy_2d_tmp/yy_2d_sec.
+B34
+Extract me1_q9_file.zip into ./yy_2d_tmp/yy_2d_sec.
+
+tar -xzvf me1_q9_file.tar.gz -C ./yy_2d_tmp/yy_2d_sec
+unzip me1_q9_file.zip -d ./yy_2d_tmp/yy_2d_sec
+
+Q35
+Backup directories and restore files.
+
+A35
+First, archive the me2q5_somedata directory with TAR to ./zz_tmp/new.tar.bz2.
+B35
+Next, extract the archive me2q5b_backup.tar.bz2 to the ./zz_tmp/ directory.
+
+sudo tar -cjvf ./zz_tmp/new.tar.bz2 ./me2q5_somedata/
+sudo tar -xf me2q5b_backup.tar.bz2 -C ./zz_tmp/
