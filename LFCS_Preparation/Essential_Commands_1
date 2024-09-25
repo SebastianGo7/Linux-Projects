@@ -1,0 +1,103 @@
+# Questions and Answers to prepare for LFCS Exam 
+
+Q26
+In your home directory, create a file named file1.
+
+A. Create a hard link to this file named linkof1. By the end of this exercise, file1 should be hard-linked with linkof1 (which you need to create).
+
+B. Create a soft link to file1, specifically named slinkof1, that points to ~/Desktop/15_ME__ist_05_1/file1. The soft link should point to this absolute path and not a relative path.
+
+A
+You need to use the ln command to create the links.
+Execute the following command to create a hard link:
+ln file1 linkof1
+
+B
+Execute the following command to create a soft link:
+ln -s ~/Desktop/15_ME__ist_05_1/file1 slinkof1
+
+Then remove the three created files.
+
+Q27
+Use bash as the pre-command. [Do not know why]
+
+Display all lines in the /etc/services file that start with the text "core." A line beginning with a word like "corel_vncadmin" should match, but a line beginning with "opencore" shouldn't. Redirect this filtered output by appending it to /opt/coreservices.txt.
+
+A27
+You need to use the grep command with appropriate options.
+Redirect this filtered output to /opt/coreservices.txt:
+sudo bash -c "grep -E "^core.*" /etc/services >> /opt/coreservices.txt"
+
+(I would have done:
+grep -E '^core' /etc/services > /opt/coreservices.txt)
+
+Q28
+With a bash command:
+
+A. The files /opt/left.txt and /opt/right.txt are almost identical. However, there is one unique line that only exists in one file. Find that line and save the content of that line in /opt/difference.txt.
+
+B. The directories /opt/dir1/ and /opt/dir2/ have very similar files. Find out which files exist only in /opt/dir2/ but not in /opt/dir1. Save the output in /opt/onlyindir2.txt.
+
+With our sample output, the content in that file would be like:
+Only in dir2: file1
+Only in dir2: file2
+Only in dir2: file3
+
+A28
+You need to use the diff command with appropriate options.
+
+A. Find that line and save the content in /opt/difference.txt:
+sudo bash -c "diff /opt/left.txt /opt/right.txt >> /opt/difference.txt"
+
+B. Find files that only exist in /opt/dir2/ but not in /opt/dir1 and save the output in /opt/onlyindir2.txt:
+sudo bash -c "diff -q /opt/dir1 /opt/dir2 >> /opt/onlyindir2.txt"
+
+Q29
+The /opt/assets/ directory contains several files. You'll need to find some special files inside it.
+
+A. Find and delete all files that have the following octal permissions: 666.
+
+B. Find all files that are exactly 1KB in size and copy them to the /opt/exactly/ directory.
+
+C. Find all files that are larger than 2KB and move them to the /opt/larger/ directory.
+
+A
+First, switch to the root user:
+sudo su -
+
+A. Find the files with 666 permissions under /opt/assets/ and remove them with the following command:
+find /opt/assets/ -perm -666 -type f -exec rm -f {} ;
+
+B. Execute the following commands to copy files that are exactly 1KB in size from /opt/assets/ to /opt/exactly/:
+find /opt/assets/ -size 1k -type f -exec cp {} /opt/exactly/ ;
+
+C. Execute the following command to move files larger than 2KB from /opt/assets/ to /opt/larger/:
+find /opt/assets/ -size +2k -type f -exec mv {} /opt/larger/ ;
+
+Q30
+In your home directory, you will find a directory called collection.
+
+A. Create a soft link in the /opt/ directory. The link should be /opt/bobscollection and point to /home/bob/collection/.
+
+B. Find all files in the collection directory that have a filename ending with .txt. Move all such files to the /opt/textfiles/ directory.
+
+C. Find all files in the collection directory that are owned by the user "adm." Copy all such files to the /opt/admfiles/ directory.
+
+D. Find all files in the collection directory that were modified less than 1 hour ago. Copy all such files to the /opt/oldfiles/ directory.
+
+A
+Create a soft link:
+sudo ln -s /home/bob/collection/ /opt/bobscollection
+
+B
+Move all text files:
+sudo find /home/bob/collection/ -type f -name "*.txt" -exec mv {} /opt/textfiles/ ;
+
+C
+Copy all files owned by user "adm":
+sudo find /home/bob/collection/ -type f -user adm -exec cp {} /opt/admfiles/ ;
+
+D
+Copy all files modified less than 1 hour ago:
+sudo find ./collection/ -mmin -60 -type f -exec cp --target-directory=/opt/oldfiles/ {} + ;
+
