@@ -156,3 +156,51 @@ Next, extract the archive me2q5b_backup.tar.bz2 to the ./zz_tmp/ directory.
 
 sudo tar -cjvf ./zz_tmp/new.tar.bz2 ./me2q5_somedata/
 sudo tar -xf me2q5b_backup.tar.bz2 -C ./zz_tmp/
+
+Q36
+In this exercise, you will work with some archives.
+
+A36
+First, archive the ./yy_2d_tmp/yy_sec/ directory to ./zz_tmp/archive.tar.bz2.
+B36
+Archive the databases directory again to ./zz_tmp/archive2.tar.gz.
+C36
+Extract the contents of me1_q9.tar.gz in ./zz_tmp/.
+
+sudo tar -cjvf ./zz_tmp/archive.tar.bz2 ./yy_2d_tmp/yy_sec/
+sudo tar -czvf ./zz_tmp/archive2.tar.gz -C ./yy_2d_tmp yy_sec/
+sudo tar -xzvf me1_q9.tar.gz -C ./zz_tmp/
+
+Q37
+In your home directory, you will find a directory called me4q4_uploads.
+
+A37
+Find the file in /me4q4_uploads/ that contains a word ending with the letter t.
+B37
+Archive the ./me4q4_uploads/ directory to ./zz_tmp/backup.tar.gz.
+C37
+Restore files from me2q5b_backup.tar.bz2 to ./zz_tmp/.
+
+grep -ro '\w*t\b' ./me4q4_uploads/
+sudo tar -czvf ./zz_tmp/backup.tar.gz ./me4q4_uploads
+sudo tar -xf me2q5b_backup.tar.bz2 -C ./zz_tmp/
+
+Q38
+How do you extract the contents of ./playground/archives/filepool.tar.gz into ./playground/extract/ and compare it with ./playground/filepool? Afterwards, delete the contents of ./playground/extract/?
+
+A38
+tar -xzvf ./playground/archives/filepool.tar.gz -C ./playground/extract/
+diff -r ./playground/extract/ ./playground/filepool
+rm -rf ./playground/extract/*
+
+Q39
+How do you move all files owned by user1 in ./playground/filepool to ./playground/user1 while preserving ownership?
+
+A39
+find ./playground/filepool -user user1 -exec mv -t ./playground/user1 {} +
+
+Q40
+How do you find all files in ./playground/filepool that have no assigned user and write the results to ./playground/listfile.txt?
+
+A40
+find ./playground/filepool -nouser > ./playground/listfile.txt
