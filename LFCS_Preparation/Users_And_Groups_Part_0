@@ -123,3 +123,38 @@ Make sure a welcome message is displayed for every user who logs in:
 A15
 Create a script under /etc/profile.d with the following content:
 echo "Welcome to our server!"
+
+Q16
+Set a hard and soft limit of 30 processes for the user trinity.
+
+A16
+Edit the /etc/security/limits.conf file and add this line:
+trinity - nproc 30
+
+Q17
+Modify the sudoers file to allow trinity to only run the /usr/bin/mount command using sudo.
+
+A17
+Edit the /etc/sudoers file using visudo and add the following line:
+trinity ALL=(ALL) /usr/bin/mount
+
+Q18
+Modify the sudoers file to allow trinity to run any sudo command, but only after entering her password.
+
+A18
+Edit the /etc/sudoers file using visudo and add the following line:
+trinity ALL=(ALL) ALL
+
+Q19
+Allow the user trinity to run any sudo command without providing a password.
+
+A19
+Edit the /etc/sudoers file using visudo and add the following line:
+trinity ALL=(ALL) NOPASSWD: ALL
+
+Q20
+Set a soft limit of 20 processes for all users in the salesteam group.
+
+A20
+Edit the /etc/security/limits.conf file and add this line:
+@salesteam soft nproc 20
