@@ -1,3 +1,5 @@
+# Questions and answers to prepare for the LFCS exam about users and groups
+
 Q1
 Add the user jane to the developers group.
 
@@ -158,3 +160,53 @@ Set a soft limit of 20 processes for all users in the salesteam group.
 A20
 Edit the /etc/security/limits.conf file and add this line:
 @salesteam soft nproc 20
+
+Q21
+Change the current password for the root account from N3wpass to S3cure123.
+
+A21
+Run the following command to change the password:
+sudo passwd root
+
+Q22
+A hard limit of 10 processes was set for users in the developers group, but it’s not working. Find and fix the issue.
+
+A22
+The issue is that the group name should be prefixed with @.
+Edit /etc/security/limits.conf and change the line to:
+@developers hard nproc 10
+
+Q23
+A new admin named smith needs to be added with the following conditions:
+
+Shell: zsh
+Password: exampassed
+Added to the wheel group without changing the primary group
+A23
+Create the user with:
+sudo useradd -s /bin/zsh -G wheel smith
+Set the password with:
+sudo passwd smith
+
+Q24
+Set a hard limit of 30 processes for the user jane.
+
+A24
+Edit the /etc/security/limits.conf file and add this line:
+jane hard nproc 30
+
+Q25
+Perform the following actions on a file named file2 in your home directory:
+
+Change ownership to bob for both the user and group.
+Set permissions to rwxrw-r--.
+Enable the SUID flag, resulting in permissions rwsrw-r--.
+
+A25
+Change the owner:
+sudo chown bob
+file2
+Set the permissions:
+chmod 764 file2
+Enable the SUID flag:
+chmod u+s file2
