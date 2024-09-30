@@ -29,3 +29,48 @@ Create a user named jack with /bin/csh as the default shell. Then, delete the ja
 A5
 sudo useradd -s /bin/csh jack
 sudo userdel -r jack
+
+Q6
+Define a policy that allows all users in the salesteam group to run any sudo command.
+
+A6
+Edit the /etc/sudoers file using visudo and add the following line:
+%salesteam ALL=(ALL) ALL
+
+Q7
+Allow the user trinity to execute sudo commands as the user sam.
+
+A7
+Edit the /etc/sudoers file using visudo and add the following line:
+trinity ALL=(sam) ALL
+
+Q8
+Identify all the security limits currently applied to your session.
+
+A8
+ulimit -a
+
+Q9
+Fix the projectadmin user account so that it can log in with the password onetime43 and set its home directory to /home/projectadmin.
+
+A9
+First, set the password using:
+sudo passwd projectadmin
+Then, update the home directory using:
+sudo usermod -d /home/projectadmin projectadmin
+
+Q10
+Create a user named sysadmin with the following requirements:
+
+Password: science
+Home directory: /sysadmin
+Shell: zsh
+Full sudo privileges without a password prompt
+
+A10
+Create the user with:
+sudo useradd -m -d /sysadmin -s /bin/zsh sysadmin
+Set the password with:
+sudo passwd sysadmin
+Grant sudo access without a password by adding this line to the /etc/sudoers file using visudo:
+sysadmin ALL=(ALL) NOPASSWD: ALL
