@@ -1,0 +1,31 @@
+Q1
+Add the user jane to the developers group.
+
+A1
+sudo usermod -aG developers jane
+
+Q2
+Create a group named cricket with a GID of 9875. Then, rename the cricket group to soccer while keeping the same GID.
+
+A2
+sudo groupadd -g 9875 cricket
+sudo groupmod -n soccer cricket
+
+Q3
+Create a system user account called apachedev.
+
+A3
+sudo useradd --system apachedev
+
+Q4
+Which keyword is used to limit the number of processes a user can run?
+
+A4
+The nproc keyword is used to set a limit on the number of processes a user can run.
+
+Q5
+Create a user named jack with /bin/csh as the default shell. Then, delete the jack user and remove their home directory.
+
+A5
+sudo useradd -s /bin/csh jack
+sudo userdel -r jack
