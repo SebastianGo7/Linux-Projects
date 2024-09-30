@@ -74,3 +74,52 @@ Set the password with:
 sudo passwd sysadmin
 Grant sudo access without a password by adding this line to the /etc/sudoers file using visudo:
 sysadmin ALL=(ALL) NOPASSWD: ALL
+
+Q11
+Perform the following group and folder tasks:
+
+Create the computestream group.
+Create a folder called /exam/computestream.
+Make the computestream group the owner of that folder.
+
+A11
+Create the group:
+sudo groupadd computestream
+Create the folder:
+sudo mkdir /exam/computestream
+Set the group ownership:
+sudo chown
+/exam/computestream
+Set the permissions:
+sudo chmod 770 /exam/computestream
+
+Q12
+Lock the root user account. Then, unlock it.
+
+A12
+To lock the root account:
+sudo passwd -l root
+To unlock the root account:
+sudo passwd -u root
+
+Q13
+Set a hard limit on the file size to 4 MiB for the user stephen.
+
+A13
+Edit the /etc/security/limits.conf file and add this line:
+stephen hard fsize 4096
+
+Q14
+Ensure that whenever a new user account is created, a README file is copied to their home directory.
+
+A14
+Place a README file in the /etc/skel directory:
+sudo touch /etc/skel/README
+
+Q15
+Make sure a welcome message is displayed for every user who logs in:
+"Welcome to our server!"
+
+A15
+Create a script under /etc/profile.d with the following content:
+echo "Welcome to our server!"
