@@ -1,0 +1,42 @@
+# Questions and Answers to prepare for LFCS Exam 
+
+Q1
+Schedule a cron job for the user bob to execute the command sudo systemctl restart nginx every Sunday at 6 AM and 11 PM.
+
+A1
+Run the command crontab -e and add the following line:
+0 6,23 * * 0 sudo systemctl restart nginx
+
+Q2
+Add the command /usr/bin/touch test_passed to the root user's crontab so that it runs daily at 9:30 PM.
+
+A2
+Execute sudo crontab -e and include the following line:
+30 21 * * * /usr/bin/touch test_passed
+
+Q3
+Set the kernel runtime parameter vm.swappiness to 10. Make this change persistent so that it is retained after a reboot.
+
+A3
+Open the /etc/sysctl.conf file:
+sudo vi /etc/sysctl.conf
+
+Add the following line to the file and save it:
+vm.swappiness=10
+
+Then apply the changes:
+sudo sysctl -p
+
+Q4
+Review the info priority logs in journalctl that start with the letter 'c'.
+
+A4
+Use the following command:
+sudo journalctl -p info -g '^c'
+
+Q5
+Analyze the error logs in journalctl using the priority flag.
+
+A5
+Use this command:
+sudo journalctl -p err
