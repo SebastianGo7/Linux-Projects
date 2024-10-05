@@ -77,3 +77,40 @@ Ensure that the rpcbind.service unit starts automatically during system boot wit
 A10
 Enable the service with:
 sudo systemctl enable rpcbind.service
+
+Q11
+Determine how much disk space the /bin/ directory is consuming.
+
+A11
+Run the command:
+du -sh /bin/
+
+Q12
+Find out what the system's current default boot target is.
+
+A12
+Use the command:
+systemctl get-default
+
+Q13
+What command can be used to view all running processes on the system, along with their nice values?
+
+A13
+The command ps lax will show all running processes along with their nice values.
+
+Q14
+List all files currently opened by the process with PID 1, owned by the root user.
+
+A14
+Execute the command:
+sudo lsof -p 1
+
+Q15
+Mask the docker.service and then unmask it.
+
+A15
+To mask the service, run:
+sudo systemctl mask docker.service
+
+To unmask it, execute:
+sudo systemctl unmask docker.service
