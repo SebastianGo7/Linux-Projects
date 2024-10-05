@@ -40,3 +40,40 @@ Analyze the error logs in journalctl using the priority flag.
 A5
 Use this command:
 sudo journalctl -p err
+
+Q6
+Which directory by default holds the logs for most services running on a Linux system?
+
+A6
+The default directory for service logs on a Linux system is /var/log/.
+
+Q7
+Change the system's boot configuration to start in a text-only console, and then revert it to boot to a graphical desktop by default.
+
+A7
+To switch to a text-only console:
+sudo systemctl set-default multi-user.target
+
+To revert to a graphical desktop:
+sudo systemctl set-default graphical.target
+
+Q8
+Check whether the docker.service unit is enabled or disabled.
+
+A8
+Run the following command:
+systemctl is-enabled docker.service
+
+Q9
+Verify the status of the docker.service.
+
+A9
+Use the command:
+sudo systemctl status docker.service
+
+Q10
+Ensure that the rpcbind.service unit starts automatically during system boot without needing to reboot for testing.
+
+A10
+Enable the service with:
+sudo systemctl enable rpcbind.service
