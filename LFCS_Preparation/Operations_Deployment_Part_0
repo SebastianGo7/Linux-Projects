@@ -114,3 +114,41 @@ sudo systemctl mask docker.service
 
 To unmask it, execute:
 sudo systemctl unmask docker.service
+
+Q16
+Execute a command that sleeps for 3000 seconds while ensuring it runs in the background.
+
+A16
+Run the command:
+sleep 3000 &
+
+Q17
+Schedule a system power-off for two hours from now and then cancel that scheduled shutdown.
+
+A17
+Schedule the shutdown with:
+sudo shutdown +120
+
+Cancel it using:
+sudo shutdown -c
+
+Q18
+Verify the integrity and availability of resources and key processes by checking the percentage of space used on the / partition.
+
+A18
+Run the command:
+df /
+
+Q19
+Enable the kernel.modules_disabled kernel runtime parameter to prevent loading new kernel modules.
+
+A19
+Execute the command:
+sudo sysctl -w kernel.modules_disabled=1
+
+Q20
+Under the /var/log directory, search recursively for all files containing the string "reboot" using grep.
+
+A20
+Use the command:
+sudo grep -r 'reboot' /var/log/
