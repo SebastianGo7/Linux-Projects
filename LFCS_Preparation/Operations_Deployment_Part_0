@@ -152,3 +152,38 @@ Under the /var/log directory, search recursively for all files containing the st
 A20
 Use the command:
 sudo grep -r 'reboot' /var/log/
+
+Q21
+Use the appropriate command to check how long the system has been up.
+
+A21
+Execute the command:
+uptime
+
+Q22
+What command would you use to check the memory usage on the system in megabytes?
+
+A22
+Run the command:
+free --mega
+
+Q23
+Identify the number of CPU core(s) per socket on the system.
+
+A23
+Use the command:
+lscpu
+
+Q24
+Add a cron job for the root user to run the command /usr/bin/touch monthly at 12:00 AM on the 1st of every month.
+
+A24
+Run sudo crontab -e and add the following line:
+0 0 1 * * /usr/bin/touch monthly
+
+Q25
+Prepare a cron job for the root user to run the command /usr/bin/touch weekly at 11:00 AM every Sunday (do not save it).
+
+A25
+Run sudo crontab -e and include the following line:
+0 11 * * 0 /usr/bin/touch weekly
